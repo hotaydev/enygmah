@@ -1,0 +1,59 @@
+name: Report a security issue
+description: |
+  You found a security issue, like a vulnerability or the use of a vulnerable dependency in enygmah
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for using enygmah!
+
+        Issues that bump vulnerable packages versions are auto-created by our workflows, so no need to fill
+        an issue for that.
+
+        So, if you found a security issue not related to a package version, **please fill [this form](https://forms.gle/8aQEmz7LFtFHqk8U6)**
+        or refer to our [Security documentation](https://github.com/hotaydev/enygmah/blob/main/.github/SECURITY.md).
+
+        Please, **keep in mind that you must use the above form**. This Issue template is used **just by the enygmah core members and maintainers**,
+        keeping track of sensitive vulnerabilities information.
+  - type: textarea
+    attributes:
+      label: Vulnerability name
+      description: Short name or description of the vulnerability
+      placeholder: e.g. CVE-xxxxxx - Sample name
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Classification
+      description: CVSS score
+      placeholder: e.g. CVSS 9.8 (Critical)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reported by
+      description: Nickname of the security ressearcher who reported this issue
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Long description
+      description: |
+        Please, add here a long description, with step to reproduce and a detailed information about
+        this vulnerability.
+
+        Include references if possible.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots or Video
+      description: |
+        Upload any screenshots or video of the issue if applicable.
+      value: |
+        <details open>
+        <summary>Screenshots / Video demonstration</summary>
+
+        [Upload media here]
+
+        </details>
