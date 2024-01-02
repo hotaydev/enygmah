@@ -162,12 +162,16 @@ We want to express our sincere gratitude to our **[Github Sponsors](https://gith
     <a href="https://forms.gle/8aQEmz7LFtFHqk8U6"> [Report a security issue or vulnerability]</a>
 </p>
 
+
+<!-- Leave commented till have more contributors -->
+<!--
 ## 🌟 Contributors
 
 <p align="center">
     <a href="https://github.com/hotaydev/enygmah/graphs/contributors">
         <img src="https://contrib.rocks/image?repo=hotaydev/enygmah&max=300&columns=14" width="600"/></a>
 </p>
+-->
 
 <!-- ProductHunt Review Button -->
 <p align="center">
