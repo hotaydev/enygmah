@@ -10,7 +10,7 @@
 | Core Member | Selected by core members / maintainers based on significant contributions and decision-making involvement | Write access to important branches    |
 | Maintainer  | Reserved for project creators and long-time core members with at least 1 year of consistent contribution  | Admin access to the project           |
 
-<sub>If you believe you qualify for one of these roles but have not been granted the corresponding access level, please reach out to us <a href="mailto:support@enygmah.com" rel="noopener noreferrer">via email</a> or on our <a href="https://discord.gg/KpN4eHY" rel="noopener noreferrer">Discord server</a>.</sub>
+<sub>If you believe you qualify for one of these roles but have not been granted the corresponding access level, please reach out to us <a href="mailto:support@enygmah.com" rel="noopener noreferrer">via email</a> or on our <a href="https://github.com/hotaydev/enygmah/discussions" rel="noopener noreferrer">Github Discussions Page</a>.</sub>
 
 ## Decision-Making
 

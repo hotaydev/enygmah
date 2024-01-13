@@ -7,10 +7,9 @@ body:
         Thank you for using enygmah!
 
         If you are looking for support, please check out our documentation
-        or consider asking a question on our Discord Channel:
+        or consider asking a question on our Github Discussions Page:
 
           - https://enygmah.com/docs
-          - https://discord.gg/KvVc32G6
           - https://github.com/hotaydev/enygmah/discussions/categories/q-a
   - type: markdown
     attributes:

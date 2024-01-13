@@ -23,7 +23,7 @@ Please read and follow our [Code of Conduct][coc].
 
 There are many ways you can help. Here are some ways to help without coding:
 
-- You can be help others on [Discord][discord].
+- You can be help others on our [Github Discussions Page][discussions].
 - You can [contribute to the official docs](https://github.com/hotaydev/enygmah-docs).
 - You can confirm bugs on the [issue tracker][issue-tracker] and mention reproducible steps. It helps the core team to get more reports so we can fix the highest priority bugs.
 <!-- - You can contribute to [translations][translations] with a [pull request](#submit-a-pull-request-pr). -->
@@ -38,7 +38,7 @@ These are issues that are beginner-friendly and do not require advanced knowledg
 ## Got a Question or a Problem?
 
 Please do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests.
-Instead, we recommend using our [discord channel][discord] or the [Github Discussions][discussions] tab to ask support-related questions.
+Instead, we recommend using our [Github Discussions][discussions] tab to ask support-related questions.
 
 These channels are a much better place to ask questions since:
 
@@ -48,7 +48,7 @@ These channels are a much better place to ask questions since:
 
 To save your and our time, we will systematically close all issues that are requests for general support and redirect people to the forum.
 
-If you would like to chat about the question in real-time, you can reach out via [our Discord server][discord].
+If you would like to chat about the question in real-time, you can reach out talking with [@TaylorHo][https://github.com/TaylorHo].
 
 ## Found a Bug?
 
@@ -149,7 +149,6 @@ Your contributions to open source, large or small, make great projects like this
 
 [coc]: https://github.com/hotaydev/enygmah/blob/main/.github/CODE_OF_CONDUCT.md "enygmah Code Of Conduct"
 [individual-cla]: https://cla-assistant.io/hotaydev/enygmah "Individual CLA"
-[discord]: https://discord.gg/KvVc32G6 "enygmah Discord Server"
 [discussions]: https://github.com/hotaydev/enygmah/discussions/categories/q-a "Github Discussions"
 [github]: https://github.com/hotaydev/enygmah "enygmah Repo"
 [issue-tracker]: https://github.com/hotaydev/enygmah/issues "enygmah Issue Tracker"

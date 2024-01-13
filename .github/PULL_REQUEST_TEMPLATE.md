@@ -11,11 +11,10 @@
 - [ ] I updated/added relevant documentation (doc comments with `///`).
 - [ ] All existing and new tests are passing.
 
-If you need help, consider asking for advice on [Github Discussions] or on our [Discord].
+If you need help, consider asking for advice on [Github Discussions] page.
 
 <!-- Links -->
 [Contribution Guide]: https://github.com/hotaydev/enygmah/blob/main/CONTRIBUTING.md
 [CLA]: https://cla-assistant.io/hotaydev/enygmah
 [.github/CODEOWNERS]: https://github.com/hotaydev/enygmah/blob/main/.github/CODEOWNERS
 [Github Discussions]: https://github.com/hotaydev/enygmah/discussions
-[Discord]: https://discord.gg/KvVc32G6

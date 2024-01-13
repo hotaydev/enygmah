@@ -12,7 +12,7 @@ We have answers to a variety of frequently asked questions in the [documentation
 Forums
 ------
 
-We have a [Discord server] which is open to everyone, so please come join us :). Drop us a line there and the enygmah staff and community users will be happy to assist. Your question might already be answered, so take a look at the existing threads before opening a new one!
+We use the [Github Discussions] which is open to everyone, so please come join us :). Drop us a line there and the enygmah staff and community users will be happy to assist. Your question might already be answered, so take a look at the existing threads before opening a new one!
 
 Make sure to mention the following information to help us provide better support:
 
@@ -28,6 +28,5 @@ If you encounter an issue or have a suggestion, head on over to enygmah's [issue
 <!-- Links -->
 [Github Discussions]: https://github.com/hotaydev/enygmah/discussions
 [documentation]: https://enygmah.com/docs
-[Discord server]: https://discord.gg/KvVc32G6
 [issues]: https://github.com/hotaydev/enygmah/issues
 [create one]: https://github.com/hotaydev/enygmah/issues/new

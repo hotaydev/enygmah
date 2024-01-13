@@ -5,7 +5,7 @@
     <a href="https://enygmah.com/">Home Page</a> |
     <a href="https://enygmah.com/blog">Blog</a> |
     <a href="https://enygmah.com/docs">Documentation</a> |
-    <a href="https://discord.gg/KvVc32G6">Discord Channel</a>
+    <a href="https://github.com/hotaydev/enygmah/discussions">Discussions</a>
 </div>
 <br></br>
 
@@ -14,7 +14,6 @@
   <a href="https://github.com/hotaydev/enygmah/issues" alt="GitHub Issues"><img src="https://img.shields.io/github/issues/hotaydev/enygmah"/></a>
   <a href="https://github.com/hotaydev/enygmah/pulls" alt="GitHub pull requests"><img src="https://img.shields.io/github/issues-pr/hotaydev/enygmah"/></a>
   <a href="https://github.com/hotaydev/enygmah/graphs/contributors" alt="GitHub contributors"><img src="https://img.shields.io/github/contributors-anon/hotaydev/enygmah?color=%230594c6"/></a>
-  <a href="https://discord.gg/KvVc32G6" alt="Discord"><img src="https://img.shields.io/discord/1182711401358303272?label=discord"/></a>
 </div>
 
 <div align="center">
@@ -95,7 +94,6 @@ That's it! You can now start using the enygmah to ensure the security and qualit
   * [Questions and Answers](https://github.com/hotaydev/enygmah/discussions/categories/q-a)
   * [Announcements](https://github.com/hotaydev/enygmah/discussions/categories/announcements)
   * [Ideas](https://github.com/hotaydev/enygmah/discussions/categories/ideas)
-* Discord: [discord.gg/KvVc32G6](https://discord.gg/KvVc32G6) - Where we answer questions, discuss workflows, and share tips
 <!-- * Twitter: [@hotaydev](https://twitter.com/hotaydev) -->
 
 ## 🫶 Support enygmah Development
@@ -104,7 +102,7 @@ If you find enygmah useful and want to help us keep the project growing, please 
 
 ## 💡 Feature requests
 
-We value your input on improving enygmah and making it more useful for you. If you have any ideas or feature requests, please share them in the [enygmah discussions: Ideas](https://github.com/hotaydev/enygmah/discussions/categories/ideas) section, on our [Discord channel](https://discord.gg/KvVc32G6) or by [opening an Issue](https://github.com/hotaydev/enygmah/issues/new) here on Github.
+We value your input on improving enygmah and making it more useful for you. If you have any ideas or feature requests, please share them in the [enygmah discussions: Ideas](https://github.com/hotaydev/enygmah/discussions/categories/ideas) section or by [opening an Issue](https://github.com/hotaydev/enygmah/issues/new) here on Github.
 
 Your feedback helps us understand our users' needs and prioritize the features that matter most to you. We appreciate your time and effort in sharing your thoughts with us.
 
