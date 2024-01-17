@@ -1,3 +1,6 @@
+<div align=center>
+  <img align="center" src="./.github/images/icon.png" alt="enygmah Logo" width="200" />
+</div>
 <h1 align="center">enygmah</h1>
 <h4 align="center">The only tool your project needs to ensure security and quality.<br/>Open-source and free.</h4>
 
@@ -5,7 +8,8 @@
     <a href="https://enygmah.com/">Home Page</a> |
     <a href="https://enygmah.com/blog">Blog</a> |
     <a href="https://enygmah.com/docs">Documentation</a> |
-    <a href="https://github.com/hotaydev/enygmah/discussions">Discussions</a>
+    <a href="https://github.com/hotaydev/enygmah/discussions">Discussions</a><br/>
+    <a href="https://crowdfunding.lfx.linuxfoundation.org/projects/34506417-17a0-4cc1-a54b-2563d098d860">Crowdfunding - The Linux Foundation</a>
 </div>
 <br></br>
 
@@ -14,11 +18,13 @@
   <a href="https://github.com/hotaydev/enygmah/issues" alt="GitHub Issues"><img src="https://img.shields.io/github/issues/hotaydev/enygmah"/></a>
   <a href="https://github.com/hotaydev/enygmah/pulls" alt="GitHub pull requests"><img src="https://img.shields.io/github/issues-pr/hotaydev/enygmah"/></a>
   <a href="https://github.com/hotaydev/enygmah/graphs/contributors" alt="GitHub contributors"><img src="https://img.shields.io/github/contributors-anon/hotaydev/enygmah?color=%230594c6"/></a>
+  <a href="https://www.bestpractices.dev/projects/8313"><img src="https://www.bestpractices.dev/projects/8313/badge"></a>
 </div>
 
 <div align="center">
   <a href="https://enygmah.com" alt="Website"><img src="https://img.shields.io/website?url=https%3A%2F%2Fenygmah.com"/></a>
   <a href="https://cla-assistant.io/hotaydev/enygmah" alt="CLA assistant"><img src="https://cla-assistant.io/readme/badge/hotaydev/enygmah"/></a>
+  <a href="https://github.com/hotaydev/enygmah/issues" alt="NPM Downloads"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"/></a>
 
   <!-- <a href="https://www.npmjs.com/package/enygmah" alt="NPM Downloads"><img src="https://img.shields.io/npm/dt/enygmah"/></a> -->
   <!-- <a href="https://www.npmjs.com/package/enygmah" alt="NPM Version"><img src="https://img.shields.io/npm/v/enygmah"/></a> -->
