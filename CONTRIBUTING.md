@@ -7,7 +7,7 @@ As a contributor, here is an overview of things to learn about and ways to get i
 
 - [Code of Conduct](#code-of-conduct)
 - [How can I help?](#how-can-i-help)
-   - [Code Contributions](#code-contributions)
+  - [Code Contributions](#code-contributions)
 - [Question or Problem?](#got-a-question-or-a-problem)
 - [Issues and Bugs](#found-a-bug)
 - [Feature Requests](#missing-a-feature)
@@ -57,8 +57,8 @@ Even better, you can [submit a Pull Request](#submit-a-pull-request-pr) with a f
 
 ## Missing a Feature?
 
-You can *request* a new feature by [submitting an issue](#submit-an-issue) using our "Feature Request" template.
-If you would like to *implement* a new feature, please open an issue and outline your proposal so that it can be discussed. 
+You can _request_ a new feature by [submitting an issue](#submit-an-issue) using our "Feature Request" template.
+If you would like to _implement_ a new feature, please open an issue and outline your proposal so that it can be discussed.
 It's always beneficial to engage in discussions about a feature before commencing its development. This proactive approach helps identify whether the feature may be controversial or lacks widespread utility.
 
 ## Submit an Issue
@@ -95,36 +95,36 @@ When submitting a Pull Request (PR) or expecting a subsequent review, please fol
 3. The PR has no merge conflicts.
 
 4. Commits and Pull Request titles should use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) prefixes/types. The commit message and the PR title should have the same format, e.g. `<prefix>: description ...`. The most used prefixes are:
-   * `fix` or `bugfix` - Bug fixes.
-   * `feat` or `feature` - New features.
-   * `chore` - Misc changes that aren't feat or fix. We usually avoid using this category.
-   * `enhance` - Enhancements to existing features.
-   * `test` - Test only changes.
-   * `ci` - Changes to the CI/CD system of flow.
-   * `build` - Changes to the build system (usually related to [oclif](https://oclif.io/) build system).
-   * `docs` - Changes to the documentation. Synce we have a dedicated repo to this, you can use this category to add in code docs to functions and methods.
-   * `style` - Changes to the code styles and patterns.
-   * `refactor` - Related to some code refactoring, aiming some readability or simplicity improvements.
-   * `perf` or `performance` - Specific to the code performance or application performance.
+   - `fix` or `bugfix` - Bug fixes.
+   - `feat` or `feature` - New features.
+   - `chore` - Misc changes that aren't feat or fix. We usually avoid using this category.
+   - `enhance` - Enhancements to existing features.
+   - `test` - Test only changes.
+   - `ci` - Changes to the CI/CD system of flow.
+   - `build` - Changes to the build system (usually related to [oclif](https://oclif.io/) build system).
+   - `docs` - Changes to the documentation. Synce we have a dedicated repo to this, you can use this category to add in code docs to functions and methods.
+   - `style` - Changes to the code styles and patterns.
+   - `refactor` - Related to some code refactoring, aiming some readability or simplicity improvements.
+   - `perf` or `performance` - Specific to the code performance or application performance.
 
 > If your PR introduces a breaking change, add a `!` at the final of the commit, e.g. `<prefix>!: description ...`
 
 5.  The PR having "allow edits from maintainers" enabled would be appreciated. Helps us help your contribution.
 
-6. The PR avoids the following changes that are not helpful to the core team:
-   * Unrelated refactoring or heavy refactoring
-   * Code or doc formatting changes including whitespace changes
-   * Dependency updates e.g. in package.json
-   * Changes that contain multiple unverified resources. This is risky for our users and is a lot of work to verify. A change with one resource that can be verified is acceptable.
+6.  The PR avoids the following changes that are not helpful to the core team:
+    - Unrelated refactoring or heavy refactoring
+    - Code or doc formatting changes including whitespace changes
+    - Dependency updates e.g. in package.json
+    - Changes that contain multiple unverified resources. This is risky for our users and is a lot of work to verify. A change with one resource that can be verified is acceptable.
 
 <!-- 7. The PR has test(s) for features or enhancements. Tests for bug fixes are also appreciated as they help prevent regressions. -->
 
 ### PR Additional Links
 
-* To run enygmah locally, just clone this repo, do an `npm install` and follow the [oclif guide](https://oclif.io/docs/introduction) to develop CLIs.
-* See our [Governance doc](https://github.com/hotaydev/enygmah/blob/main/.github/GOVERNANCE.md) to understand how we handle roles and access levels into the project and how handle project decisions.
-* For security vulnerabilities reports, see our [Securitity Guide](https://github.com/hotaydev/enygmah/blob/main/.github/SECURITY.md).
-* If you need some other support, [he have a doc for that](https://github.com/hotaydev/enygmah/blob/main/.github/SUPPORT.md).
+- To run enygmah locally, just clone this repo, do an `npm install` and follow the [oclif guide](https://oclif.io/docs/introduction) to develop CLIs.
+- See our [Governance doc](https://github.com/hotaydev/enygmah/blob/main/.github/GOVERNANCE.md) to understand how we handle roles and access levels into the project and how handle project decisions.
+- For security vulnerabilities reports, see our [Securitity Guide](https://github.com/hotaydev/enygmah/blob/main/.github/SECURITY.md).
+- If you need some other support, [he have a doc for that](https://github.com/hotaydev/enygmah/blob/main/.github/SUPPORT.md).
 
 ### Sign the CLA
 

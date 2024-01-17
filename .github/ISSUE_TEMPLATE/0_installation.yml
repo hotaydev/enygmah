@@ -1,5 +1,6 @@
 name: I am having difficulty installing enygmah or getting it to work
-description: You have run into problems while downloading or installing enygmah, or the
+description:
+  You have run into problems while downloading or installing enygmah, or the
   "enygmah" tool is crashing, or you are running into some other issue before even
   being able to run enygmah tool.
 body:

@@ -1,6 +1,6 @@
-*Replace this paragraph with a description of what this PR is changing or adding, and why. Consider including before/after code/screenshots.*
+_Replace this paragraph with a description of what this PR is changing or adding, and why. Consider including before/after code/screenshots._
 
-*List which issues are fixed by this PR. You must list at least one issue. An issue is not required if the PR fixes something trivial like a typo.*
+_List which issues are fixed by this PR. You must list at least one issue. An issue is not required if the PR fixes something trivial like a typo._
 
 ## Pre-launch Checklist
 
@@ -14,6 +14,7 @@
 If you need help, consider asking for advice on [Github Discussions] page.
 
 <!-- Links -->
+
 [Contribution Guide]: https://github.com/hotaydev/enygmah/blob/main/CONTRIBUTING.md
 [CLA]: https://cla-assistant.io/hotaydev/enygmah
 [.github/CODEOWNERS]: https://github.com/hotaydev/enygmah/blob/main/.github/CODEOWNERS

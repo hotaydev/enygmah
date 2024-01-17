@@ -3,7 +3,7 @@
 ## Roles
 
 | Role        | Description                                                                                               | Access Level                          |
-|-------------|-----------------------------------------------------------------------------------------------------------|---------------------------------------|
+| ----------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | User        | Individuals who use the software                                                                          | None                                  |
 | Supporter   | Contributes by commenting on Issues/PRs, or opening Pull Requests                                         | Submitting PRs from forks             |
 | Contributor | Has 2 merged pull requests or have meaningful commenting contributions                                    | Write access to non-critical branches |
@@ -22,15 +22,19 @@
 ## Principles
 
 ### 1. Open
+
 - All of our software is open source.
 
 ### 2. Welcoming and Respectful
+
 - Look at the [Code of Conduct](https://github.com/hotaydev/enygmah/blob/main/.github/CODE_OF_CONDUCT.md).
 
 ### 3. Transparent and Accessible
+
 - Changes are made publicly in the code repository.
 
 ### 4. Equality
+
 - All decisions are made through voting, ensuring equal representation.
 - Ideas are proposed through [Discussions](https://github.com/hotaydev/enygmah/discussions) for community voting.
 

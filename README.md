@@ -28,34 +28,33 @@
 
 ## Table of Contents
 
-* [<g-emoji class="g-emoji" alias="thinking" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f914.png">🤔</g-emoji> Why enygmah?](#🤔-why-enygmah)
-* [<g-emoji class="g-emoji" alias="eyes" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f440.png">👀</g-emoji> How can I use it?](#👀-how-can-i-use-it)
-* [<g-emoji class="g-emoji" alias="books" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4da.png">📚</g-emoji> Learn more](#📚-learn-more)
-* [🫶 Support enygmah Development](#🫶-support-enygmah-development)
-* [<g-emoji class="g-emoji" alias="bulb" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4a1.png">💡</g-emoji> Feature requests](#💡-feature-requests)
-* [<g-emoji class="g-emoji" alias="star2" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png">🌟</g-emoji> Contributing to enygmah](#🌟-contributing-to-enygmah)
-* [<g-emoji class="g-emoji" alias="sparkles" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png">✨</g-emoji> Inspiration](#✨-inspiration)
-* [<g-emoji class="g-emoji" alias="pray" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f64f.png">🙏</g-emoji> Thank You](#🙏-thank-you)
-
+- [<g-emoji class="g-emoji" alias="thinking" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f914.png">🤔</g-emoji> Why enygmah?](#🤔-why-enygmah)
+- [<g-emoji class="g-emoji" alias="eyes" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f440.png">👀</g-emoji> How can I use it?](#👀-how-can-i-use-it)
+- [<g-emoji class="g-emoji" alias="books" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4da.png">📚</g-emoji> Learn more](#📚-learn-more)
+- [🫶 Support enygmah Development](#🫶-support-enygmah-development)
+- [<g-emoji class="g-emoji" alias="bulb" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4a1.png">💡</g-emoji> Feature requests](#💡-feature-requests)
+- [<g-emoji class="g-emoji" alias="star2" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png">🌟</g-emoji> Contributing to enygmah](#🌟-contributing-to-enygmah)
+- [<g-emoji class="g-emoji" alias="sparkles" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png">✨</g-emoji> Inspiration](#✨-inspiration)
+- [<g-emoji class="g-emoji" alias="pray" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f64f.png">🙏</g-emoji> Thank You](#🙏-thank-you)
 
 ## 🤔 Why enygmah?
 
 [enygmah](https://enygmah.com) is a [Free and Open Source Software](https://www.gnu.org/philosophy/floss-and-foss.html) (FOSS), created to streamline and **simplify security and code quality processes** through static code analyses (SAST) and dynamic code analyses (DAST). Its goal is to be **user-friendly** and **easy to integrate** into development pipelines.
 
-According to [@TaylorHo](https://github.com/TaylorHo), the creator and primary developer behind the project, *"Implementing various security and quality processes in the software development lifecycle is both time-consuming and expensive. It often entails research, testing, implementation, adjustments, team training, and ongoing updates."*
+According to [@TaylorHo](https://github.com/TaylorHo), the creator and primary developer behind the project, _"Implementing various security and quality processes in the software development lifecycle is both time-consuming and expensive. It often entails research, testing, implementation, adjustments, team training, and ongoing updates."_
 
 Enygmah steps in to consolidate all these processes into a single solution. It offers:
 
-* Local analyses
-* Pipeline analyses
-* Customizable Quality Gates
-* Various types of analyses, including:
-  * Vulnerabilities
-  * Code patterns
-  * Support for 20+ different languages and technologies
-* Lightweight pre-commit analyses
-  * Prevents developers from submitting non-standard or vulnerable code
-  * Fully customizable
+- Local analyses
+- Pipeline analyses
+- Customizable Quality Gates
+- Various types of analyses, including:
+  - Vulnerabilities
+  - Code patterns
+  - Support for 20+ different languages and technologies
+- Lightweight pre-commit analyses
+  - Prevents developers from submitting non-standard or vulnerable code
+  - Fully customizable
 
 And the best part? **It's completely free and open source!**
 
@@ -72,6 +71,7 @@ To start using enygmah, follow one of these two simple options:
 ```
 npm i -g enygmah
 ```
+
 <sub>You can use <a href="https://yarnpkg.com/">yarn</a> os <a href="https://pnpm.io/">pnpm</a> as well</sub>
 
 ### Download a binary:
@@ -81,20 +81,21 @@ Go to our [releases](https://github.com/hotaydev/enygmah/releases/latest) page a
 <sub>You can use it as a standalone application, running it right from the binary/executable folder, or you can add it to the path of your system.</sub>
 
 <!-- TODO: here we can add a script to quick installation, like the nodesource do with NodeJS -->
+
 ---
 
 That's it! You can now start using the enygmah to ensure the security and quality of your projects! We are sure that it will be really helpful to you 🎉
 
 ## 📚 Learn more
 
-* Website: [enygmah.com](https://enygmah.com)
-  * Documentation: [enygmah.com/docs](https://enygmah.com/docs)
-  * Blog: [enygmah.com/blog](https://enygmah.com/blog)
-* Discussions: [Github Discussions](https://github.com/hotaydev/enygmah/discussions)
-  * [Questions and Answers](https://github.com/hotaydev/enygmah/discussions/categories/q-a)
-  * [Announcements](https://github.com/hotaydev/enygmah/discussions/categories/announcements)
-  * [Ideas](https://github.com/hotaydev/enygmah/discussions/categories/ideas)
-<!-- * Twitter: [@hotaydev](https://twitter.com/hotaydev) -->
+- Website: [enygmah.com](https://enygmah.com)
+  - Documentation: [enygmah.com/docs](https://enygmah.com/docs)
+  - Blog: [enygmah.com/blog](https://enygmah.com/blog)
+- Discussions: [Github Discussions](https://github.com/hotaydev/enygmah/discussions)
+  - [Questions and Answers](https://github.com/hotaydev/enygmah/discussions/categories/q-a)
+  - [Announcements](https://github.com/hotaydev/enygmah/discussions/categories/announcements)
+  - [Ideas](https://github.com/hotaydev/enygmah/discussions/categories/ideas)
+  <!-- * Twitter: [@hotaydev](https://twitter.com/hotaydev) -->
 
 ## 🫶 Support enygmah Development
 
@@ -133,14 +134,14 @@ Thank you to all those who inspire us, and we look forward to seeing what the en
 
 enygmah is also made possible by the following technologies:
 
-* [oclif](https://github.com/oclif/oclif/) - The base of our CLI
-* [npm](https://github.com/npm/npm-audit-report) - Source of `npm audit`
-* [Docker](https://github.com/docker/docker-bench-security) - Docker best practices for containers
-* [trivy](https://github.com/aquasecurity/trivy) - Trivy file system, docker, kubernetes, and more analysis
-* [snyk](https://github.com/snyk/cli) - Vulnerability reports
-* [zaproxy](https://github.com/zaproxy/zaproxy) - Web applications vulnerability analysis
-* [sonar-scanner](https://github.com/SonarSource/sonar-scanner-npm) - Source of the analysis of the Sonarqube
-* [make-it-safer](https://www.npmjs.com/package/make-it-safer) - Easy npm updates and bug fixes
+- [oclif](https://github.com/oclif/oclif/) - The base of our CLI
+- [npm](https://github.com/npm/npm-audit-report) - Source of `npm audit`
+- [Docker](https://github.com/docker/docker-bench-security) - Docker best practices for containers
+- [trivy](https://github.com/aquasecurity/trivy) - Trivy file system, docker, kubernetes, and more analysis
+- [snyk](https://github.com/snyk/cli) - Vulnerability reports
+- [zaproxy](https://github.com/zaproxy/zaproxy) - Web applications vulnerability analysis
+- [sonar-scanner](https://github.com/SonarSource/sonar-scanner-npm) - Source of the analysis of the Sonarqube
+- [make-it-safer](https://www.npmjs.com/package/make-it-safer) - Easy npm updates and bug fixes
 
 # 🙏 Thank You
 
@@ -159,7 +160,6 @@ We want to express our sincere gratitude to our **[Github Sponsors](https://gith
 <p align="center">
     <a href="https://forms.gle/8aQEmz7LFtFHqk8U6"> [Report a security issue or vulnerability]</a>
 </p>
-
 
 <!-- Leave commented till have more contributors -->
 <!--

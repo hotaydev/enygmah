@@ -16,4 +16,4 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           organization: true
-          file: 'README.md'
+          file: "README.md"
