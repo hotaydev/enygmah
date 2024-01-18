@@ -9,7 +9,7 @@
     <a href="https://enygmah.com/blog">Blog</a> |
     <a href="https://enygmah.com/docs">Documentation</a> |
     <a href="https://github.com/hotaydev/enygmah/discussions">Discussions</a><br/>
-    <a href="https://crowdfunding.lfx.linuxfoundation.org/projects/34506417-17a0-4cc1-a54b-2563d098d860">Crowdfunding - The Linux Foundation</a>
+    <!-- <a href="https://crowdfunding.lfx.linuxfoundation.org/projects/34506417-17a0-4cc1-a54b-2563d098d860">Crowdfunding - The Linux Foundation</a> -->
 </div>
 <br></br>
 
