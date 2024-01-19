@@ -28,6 +28,7 @@
     "eslint-config-oclif": "^5",
     "eslint-config-oclif-typescript": "^3",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsdoc": "^48.0.2",
     "husky": "^8.0.3",
     "mocha": "^10",
     "oclif": "^4.1.3",

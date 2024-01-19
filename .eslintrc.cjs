@@ -9,6 +9,7 @@ module.exports = {
     "oclif",
     "oclif-typescript",
     "prettier",
+    "plugin:jsdoc/recommended-typescript-error",
   ],
   overrides: [
     {
@@ -26,7 +27,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "jsdoc"],
   rules: {
     camelcase: "error",
     "capitalized-comments": "error",
