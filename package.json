@@ -1,10 +1,32 @@
 {
+  "name": "enygmah",
+  "version": "0.1.0",
+  "description": "The only tool your project needs to guarantee security and quality. Open-source and free.",
+  "main": "./bin/run.js",
+  "license": "AGPL-3.0",
+  "homepage": "https://enygmah.com",
+  "repository": "https://github.com/hotaydev/enygmah",
+  "bugs": "https://github.com/hotaydev/enygmah/issues",
   "author": "Hotay <hi@hotay.dev>",
   "contributors": [
     "TaylorHo <taylor@hotay.dev>"
   ],
   "bin": {
-    "enygmah": "./bin/run.js"
+    "enygmah": "bin/dev.js"
+  },
+  "scripts": {
+    "lint": "eslint --fix --ext .ts,.cjs,.js .",
+    "lint:all": "eslint --fix .",
+    "prettier": "prettier --write .",
+    "format": "npm run prettier && npm run lint:all",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "docs": "typedoc",
+    "prepare": "if [ -d ./node_modules/husky ]; then husky install; fi",
+    "build": "tsc -b",
+    "clean": "shx rm -f oclif.manifest.json && shx rm -rf dist",
+    "prepack": "npm run clean && npm run build && oclif manifest",
+    "postpack": "rm -rf ./dist/*.tar.gz",
+    "pack": "oclif pack tarballs --xz"
   },
   "dependencies": {
     "@oclif/core": "^3",
@@ -13,7 +35,6 @@
     "@oclif/plugin-update": "^4",
     "@oclif/plugin-warn-if-update-available": "^3"
   },
-  "description": "The only tool your project needs to guarantee security and quality. Open-source and free.",
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
     "@oclif/test": "^3",
@@ -33,6 +54,7 @@
     "mocha": "^10",
     "oclif": "^4.1.3",
     "prettier": "^3.2.2",
+    "semantic-release": "^23.0.0",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
     "typedoc": "^0.25.7",
@@ -47,10 +69,6 @@
     "/dist",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/hotaydev/enygmah",
-  "license": "AGPL-3.0",
-  "main": "./bin/run.js",
-  "name": "enygmah",
   "oclif": {
     "bin": "enygmah",
     "dirname": "enygmah",
@@ -63,22 +81,6 @@
     ],
     "topicSeparator": " "
   },
-  "repository": "hotaydev/enygmah",
-  "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
-    "lint": "eslint --fix --ext .ts,.cjs,.js .",
-    "lint:all": "eslint --fix .",
-    "prettier": "prettier --write .",
-    "format": "npm run prettier && npm run lint:all",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "npm run format",
-    "prepack": "npm run build && oclif manifest",
-    "prepare": "husky install && npm run build",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "docs": "typedoc"
-  },
-  "version": "0.0.1",
-  "bugs": "https://github.com/hotaydev/enygmah/issues",
   "keywords": [
     "security",
     "enygmah",
