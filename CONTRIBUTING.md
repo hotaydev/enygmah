@@ -35,6 +35,8 @@ For ways to help with coding, read the next section.
 For contributors who want to help with coding, we have a list of [good first issues](https://github.com/hotaydev/enygmah/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) to help you get started.
 These are issues that are beginner-friendly and do not require advanced knowledge of the codebase. We encourage new contributors to start with these issues and gradually work their way up to more challenging tasks.
 
+We use [Dev Containers technology](https://containers.dev/) to run the project easily. If you're on Linux or macOS, you can run the project with or without Dev Containers, but if you're on Windows, please use this tool to have a smooth config experience.
+
 ## Got a Question or a Problem?
 
 Please do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests.

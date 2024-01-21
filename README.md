@@ -127,6 +127,10 @@ There are ways to contribute [with code](https://github.com/hotaydev/enygmah/blo
 
 To set up a development environment for the enygmah cli tool, you just need to have installed [NodeJS and npm](https://nodejs.org/). The environment is the same for macOS/Linux and for Windows.
 
+Also, we use the [Dev Containers technology](https://containers.dev/), so you just need to install [this extension in your VS Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) and all your environment is ready to the development 😉
+<sub>It's more useful for Windows users, since the Dev Container will make possible to run some Linux scripts of the project.</sub>
+<sub>If you are on Windows and don't want to use Dev containers, the "npm install" may fail, so run "npx husky install" to have all the needed tools.</sub>
+
 We recomend installing NodeJs with NVM (Node Version Manager). [Take a look here](https://github.com/nvm-sh/nvm).
 
 The environment is the same for our documentation. You can see or contribute to it [here, on our Docs repository](https://github.com/hotaydev/enygmah-docs).
