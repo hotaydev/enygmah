@@ -1,5 +1,5 @@
 <div align=center>
-  <img align="center" src="./.github/images/icon.png" alt="enygmah Logo" width="200" />
+  <img align="center" src="https://raw.githubusercontent.com/hotaydev/enygmah/main/.github/images/icon.png" alt="enygmah Logo" width="200" />
 </div>
 <h1 align="center">enygmah</h1>
 <h4 align="center">The only tool your project needs to ensure security and quality.<br/>Open-source and free.</h4>

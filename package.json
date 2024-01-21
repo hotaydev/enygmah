@@ -35,6 +35,8 @@
     "prettier": "^3.2.2",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
+    "typedoc": "^0.25.7",
+    "typedoc-material-theme": "^1.0.2",
     "typescript": "^5"
   },
   "engines": {
@@ -72,7 +74,8 @@
     "posttest": "npm run format",
     "prepack": "npm run build && oclif manifest",
     "prepare": "husky install && npm run build",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\""
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "docs": "typedoc"
   },
   "version": "0.0.1",
   "bugs": "https://github.com/hotaydev/enygmah/issues",

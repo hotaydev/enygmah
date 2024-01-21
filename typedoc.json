@@ -1,0 +1,9 @@
+{
+  "plugin": ["typedoc-material-theme"],
+  "themeColor": "#33ccff",
+  "out": "./docs",
+  "entryPoints": ["./src/index.ts"],
+  "name": "enygmah",
+  "readme": "./README.md",
+  "includeVersion": false
+}
