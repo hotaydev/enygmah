@@ -7,7 +7,6 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "oclif",
-    "oclif-typescript",
     "prettier",
     "plugin:jsdoc/recommended-typescript-error",
   ],

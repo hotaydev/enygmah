@@ -23,7 +23,7 @@
     [
       "@semantic-release/github",
       {
-        "assets": "dist/*.tar.xz"
+        "assets": "dist/*.tar.gz"
       }
     ],
     [
