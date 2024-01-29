@@ -27,8 +27,8 @@
   <a href="https://github.com/hotaydev/enygmah/issues" alt="NPM Downloads"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"/></a>
   <a href="https://github.com/semantic-release/semantic-release" alt="semantic-release: angular"><img src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release"/></a>
 
-  <!-- <a href="https://www.npmjs.com/package/enygmah" alt="NPM Downloads"><img src="https://img.shields.io/npm/dt/enygmah"/></a> -->
-  <!-- <a href="https://www.npmjs.com/package/enygmah" alt="NPM Version"><img src="https://img.shields.io/npm/v/enygmah"/></a> -->
+  <!-- <a href="https://www.npmjs.com/package/@enygmah/cli" alt="NPM Downloads"><img src="https://img.shields.io/npm/dt/@enygmah/cli"/></a> -->
+  <!-- <a href="https://www.npmjs.com/package/@enygmah/cli" alt="NPM Version"><img src="https://img.shields.io/npm/v/@enygmah/cli"/></a> -->
 </div>
 
 ---

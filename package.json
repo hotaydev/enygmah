@@ -22,13 +22,18 @@
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "docs": "typedoc",
     "prepare": "git config --local core.hooksPath .hooks/",
-    "build": "tsc -b",
+    "build": "tsc -b && oclif manifest",
     "clean": "shx rm -f oclif.manifest.json && shx rm -rf dist",
     "prepack": "npm run clean && npm run build && oclif manifest",
     "pack": "oclif pack tarballs --no-xz"
   },
   "dependencies": {
-    "@oclif/core": "^3"
+    "@oclif/core": "^3",
+    "inquirer": "^9.2.13",
+    "@oclif/plugin-not-found": "^3.0.9",
+    "@oclif/plugin-update": "^4",
+    "@oclif/plugin-warn-if-update-available": "^3",
+    "@oclif/plugin-help": "^6"
   },
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
@@ -66,16 +71,12 @@
     "bin": "enygmah",
     "dirname": "enygmah",
     "commands": "./dist/commands",
-    "plugins": [],
-    "jitPlugins": {
-      "@oclif/plugin-not-found": "^3.0.9",
-      "@oclif/plugin-update": "^4",
-      "@oclif/plugin-warn-if-update-available": "^3",
-      "@oclif/plugin-help": "^6"
-    },
-    "hooks": {
-      "jit_plugin_not_installed": "./src/hooks/jit-plugin-not-installed.ts"
-    },
+    "plugins": [
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-update",
+      "@oclif/plugin-warn-if-update-available",
+      "@oclif/plugin-help"
+    ],
     "topicSeparator": " "
   },
   "keywords": [
