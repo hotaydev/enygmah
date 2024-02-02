@@ -6,7 +6,6 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "oclif",
     "prettier",
     "plugin:jsdoc/recommended-typescript-error",
   ],
@@ -24,7 +23,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
-    sourceType: "module",
+    sourceType: "script",
   },
   plugins: ["@typescript-eslint", "jsdoc"],
   rules: {
