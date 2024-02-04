@@ -1,6 +1,6 @@
-import { Command } from "@oclif/core";
+import { BaseCommand } from "../base-command.js";
 
-export default class Init extends Command {
+export default class Init extends BaseCommand {
   static description = "Configure the tool - long description";
   static summary = "Configure the tool";
 

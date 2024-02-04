@@ -1,6 +1,7 @@
-import { Args, Command } from "@oclif/core";
+import { Args } from "@oclif/core";
+import { BaseCommand } from "../base-command.js";
 
-export default class Analyze extends Command {
+export default class Analyze extends BaseCommand {
   static summary = "Analyzes the project in search of issues";
   static description =
     "Analyzes the project for security, quality and config issues.";

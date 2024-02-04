@@ -9,7 +9,7 @@
     "target": "es2022",
     "composite": true,
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*.ts"],
   "ts-node": {
     "esm": true,
   },
