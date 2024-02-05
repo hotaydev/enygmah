@@ -13,19 +13,19 @@
       "upgradePackages": true,
       "username": "vscode",
       "userUid": "1001",
-      "userGid": "1001",
+      "userGid": "1001"
     },
     "ghcr.io/devcontainers/features/node:1": {
       "nodeGypDependencies": true,
       "version": "lts",
-      "nvmVersion": "latest",
+      "nvmVersion": "latest"
     },
     "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
       "plugins": "ssh-agent npm",
       "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions",
-      "username": "vscode",
+      "username": "vscode"
     },
-    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
   },
   "customizations": {
     "vscode": {
@@ -33,10 +33,10 @@
         "esbenp.prettier-vscode",
         "ms-vscode.vscode-typescript-next",
         "dbaeumer.vscode-eslint",
-        "vivaxy.vscode-conventional-commits",
-      ],
-    },
-  },
+        "vivaxy.vscode-conventional-commits"
+      ]
+    }
+  }
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
