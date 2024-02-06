@@ -77,7 +77,13 @@
       "@oclif/plugin-warn-if-update-available",
       "@oclif/plugin-help"
     ],
-    "topicSeparator": " "
+    "topicSeparator": " ",
+    "additionalVersionFlags": [
+      "-v"
+    ],
+    "additionalHelpFlags": [
+      "-h"
+    ]
   },
   "keywords": [
     "security",
