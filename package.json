@@ -28,7 +28,7 @@
     "pack": "oclif pack tarballs --no-xz"
   },
   "dependencies": {
-    "@oclif/core": "^3.19.0",
+    "@oclif/core": "^3.19.1",
     "@oclif/plugin-help": "^6.0.12",
     "@oclif/plugin-not-found": "^3.0.10",
     "@oclif/plugin-update": "^4.1.10",
@@ -48,11 +48,11 @@
     "eslint": "^8.56.0",
     "eslint-config-oclif": "^5.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^48.0.5",
+    "eslint-plugin-jsdoc": "^48.0.6",
     "mocha": "^10.2.0",
-    "oclif": "^4.4.6",
+    "oclif": "^4.4.7",
     "prettier": "^3.2.5",
-    "semantic-release": "^23.0.0",
+    "semantic-release": "^23.0.2",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
     "typedoc": "^0.25.7",
