@@ -3,10 +3,10 @@ import path from "node:path";
 import { writeFile } from "node:fs";
 
 export default class Init extends BaseCommand {
-  static description = "Configure the tool - long description";
-  static summary = "Configure the tool";
+  public static readonly description = "Configure the tool - long description";
+  public static readonly summary = "Configure the tool";
 
-  static examples = ["<%= config.bin %> <%= command.id %>"];
+  public static readonly examples = ["<%= config.bin %> <%= command.id %>"];
 
   public async run(): Promise<void> {
     // Configure the tool with an .enygmah file and a folder for hooks and other configuration

@@ -1,10 +1,10 @@
 import { Args } from "@oclif/core";
 import { BaseCommand } from "../base-command.js";
 
-export default class Analyze extends BaseCommand {
-  public static readonly summary = "Analyzes the project in search of issues";
+export default class Fix extends BaseCommand {
+  public static readonly summary = "Fix the project issues";
   public static readonly description =
-    "Analyzes the project for security, quality and config issues.";
+    "Fix the project issues related to security, quality and config problems.";
 
   public static readonly args = {
     type: Args.string({
@@ -25,7 +25,7 @@ export default class Analyze extends BaseCommand {
   ];
 
   public async run(): Promise<void> {
-    const { args } = await this.parse(Analyze);
+    const { args } = await this.parse(Fix);
     this.log(args.type);
   }
 }
