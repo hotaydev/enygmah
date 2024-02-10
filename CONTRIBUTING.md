@@ -73,6 +73,8 @@ The Issues page provides various templates, covering topics like installation pr
 
 ## Submit a Pull Request (PR)
 
+Your PR should be open from **your branch directly into the main branch**. We manage the versions by publishing a release and a tag here, on GithUb.
+
 Before working on your pull request, please check the following:
 
 1. Search [GitHub][search-pr] for related PRs that may effect your submission.
