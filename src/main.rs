@@ -1,6 +1,8 @@
 use clap::{Parser, Subcommand};
 use clap_verbosity_flag::Verbosity;
 
+mod subcommands;
+
 #[derive(Parser)]
 #[command(version, about, long_about = None)] // It's read from Cargo.toml
 struct Cli {
@@ -38,19 +40,19 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Code { path }) => {
-            println!("{}", path);
+            subcommands::code::analyze::analyze(path);
         }
         Some(Commands::Web { url }) => {
-            println!("{}", url);
+            subcommands::web::analyze::analyze(url);
         }
         Some(Commands::Api { url }) => {
-            println!("{}", url);
+            subcommands::api::analyze::analyze(url);
         }
         Some(Commands::Mobile { path }) => {
-            println!("{}", path);
+            subcommands::mobile::analyze::analyze(path);
         }
         Some(Commands::Binary { path }) => {
-            println!("{}", path)
+            subcommands::binary::analyze::analyze(path);
         }
         None => {} // Will automatically show the help message from Clap
     }
