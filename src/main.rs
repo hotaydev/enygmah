@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use clap_verbosity_flag::Verbosity;
 
+mod helpers;
 mod subcommands;
 
 #[derive(Parser)]
