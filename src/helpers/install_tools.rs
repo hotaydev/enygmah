@@ -1,10 +1,9 @@
 use bollard::{image::ListImagesOptions, Docker};
 
-use log::{debug, error};
+use log::{debug, error, info};
 use std::process;
 
 pub async fn install_tools() {
-    // Detect OS: https://doc.rust-lang.org/std/env/consts/constant.OS.html
     // Progress bars: https://docs.rs/indicatif/latest/indicatif/
 
     // Here we need to download the Docker image containing all the tools and run the container
@@ -33,7 +32,21 @@ pub async fn install_tools() {
         .await
         .unwrap();
 
+    let mut docker_image_id: Option<String> = None;
     for image in images {
-        println!("-> {:?}", image);
+        if image.repo_tags.contains(&"hotay/enygmah".to_string()) {
+            docker_image_id = Some(image.id.clone());
+            break;
+        }
     }
+
+    let id = match docker_image_id {
+        Some(id) => id,
+        None => {
+            info!("enygmah docker image not found, downloading...");
+            process::exit(1); // TODO: download image
+        }
+    };
+
+    // run the id image
 }

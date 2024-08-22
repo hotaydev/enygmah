@@ -1,4 +1,10 @@
-FROM alpine:3.20
+FROM alpine:3.20@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5
+
+LABEL maintainer="Taylor Hoffmann <taylor@hotay.dev>"
+LABEL version="1.0.0"
+LABEL description="Automate vulnerability analysis within several tools"
+LABEL license="AGPL-3.0"
+LABEL tags="security, vulnerability, analysis"
 
 WORKDIR /home/enygmah
 
@@ -40,9 +46,10 @@ RUN apk add --no-cache cppcheck
 
 ## Install SpotBugs
 RUN wget https://github.com/spotbugs/spotbugs/releases/download/4.8.6/spotbugs-4.8.6.tgz && \
-    tar -xzf spotbugs-4.8.6.tgz && rm -rf spotbugs-4.8.6.tgz && mv ./spotbugs-4.8.6 /usr/local/bin/spotbugs && \
-    chmod +x /usr/local/bin/spotbugs/bin/spotbugs
-# Use it running /usr/local/bin/spotbugs/bin/spotbugs
+    tar -xzf spotbugs-4.8.6.tgz && rm -rf spotbugs-4.8.6.tgz && mv ./spotbugs-4.8.6 /usr/local/bin/spotbugs-src && \
+    chmod +x /usr/local/bin/spotbugs-src/bin/spotbugs && \
+    echo -e "#!/bin/bash\n\nsh /usr/local/bin/spotbugs-src/bin/spotbugs\n" > /usr/local/bin/spotbugs && \
+    chmod +x /usr/local/bin/spotbugs
 
 ## Install Semgrep
 RUN python3 -m pip install semgrep --break-system-packages
@@ -52,8 +59,9 @@ RUN python3 -m pip install semgrep --break-system-packages
 RUN wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Crossplatform.zip && \
     unzip ZAP_2.15.0_Crossplatform.zip && \
     rm -rf ZAP_2.15.0_Crossplatform.zip && \
-    mv ZAP_2.15.0 /usr/local/bin/ZAP
-# Use it with `bash /usr/local/bin/ZAP/zap.sh -cmd -quickurl "https://www.website.com/" -quickout ~/report.json`
+    mv ZAP_2.15.0 /usr/local/bin/ZAP-proxy && \
+    echo -e "#!/bin/bash\n\nbash /usr/local/bin/ZAP-proxy/zap.sh\n" > /usr/local/bin/zap && \
+    chmod +x /usr/local/bin/zap
 
 ##############################################################################################################
 
