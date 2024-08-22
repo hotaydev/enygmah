@@ -1,5 +1,6 @@
 use clap::{Parser, Subcommand};
 use clap_verbosity_flag::Verbosity;
+use colored::Colorize;
 
 mod helpers;
 mod subcommands;
@@ -33,6 +34,11 @@ async fn main() {
     env_logger::Builder::new()
         .filter_level(cli.verbose.log_level_filter())
         .init();
+
+    println!(
+        "\n{}\n",
+        String::from(" -> enygmah ").on_blue().white().bold()
+    );
 
     match &cli.command {
         Some(Commands::Scan { asset }) => {
