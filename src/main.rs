@@ -17,43 +17,29 @@ struct Cli {
 #[derive(Subcommand)]
 #[command(arg_required_else_help(true))]
 enum Commands {
-    /// Analyze the source code of a project
-    Code { path: String },
-    /// Analyze a web application
-    Web { url: String },
-    /// Analyze an API endpoints
-    Api { url: String },
-    /// Analyze a mobile app binary, such as an .apk
-    Mobile { path: String },
-    /// Analyze a compiled binary, such as an .exe
-    Binary { path: String },
+    /// Analyze an asset
+    Scan { asset: String },
+    /// Download needed tools and Docker Images
+    Install {},
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let cli = Cli::parse();
 
     // Initialized the logger accordingly to the verbosity level defined by clap arguments
-    // TODO: use log::{debug, error, log_enabled, info, Level};
+    // TODO: use log::{error, warn, info, debug, trace};
     // as mentioned here: https://docs.rs/env_logger/latest/env_logger/#example
     env_logger::Builder::new()
         .filter_level(cli.verbose.log_level_filter())
         .init();
 
     match &cli.command {
-        Some(Commands::Code { path }) => {
-            subcommands::code::analyze::analyze(path);
+        Some(Commands::Scan { asset }) => {
+            subcommands::scan::analyze::analyze(asset).await;
         }
-        Some(Commands::Web { url }) => {
-            subcommands::web::analyze::analyze(url);
-        }
-        Some(Commands::Api { url }) => {
-            subcommands::api::analyze::analyze(url);
-        }
-        Some(Commands::Mobile { path }) => {
-            subcommands::mobile::analyze::analyze(path);
-        }
-        Some(Commands::Binary { path }) => {
-            subcommands::binary::analyze::analyze(path);
+        Some(Commands::Install {}) => {
+            helpers::install_tools::install_tools().await;
         }
         None => {} // Will automatically show the help message from Clap
     }
