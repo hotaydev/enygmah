@@ -1,8 +1,10 @@
 use bollard::{
+    container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::{CreateImageOptions, ListImagesOptions},
-    secret::ImageSummary,
+    secret::{ContainerSummary, ImageSummary},
     Docker,
 };
+use colored::Colorize;
 
 use futures_util::StreamExt;
 use indicatif::{HumanBytes, MultiProgress, ProgressBar, ProgressStyle};
@@ -31,6 +33,11 @@ pub async fn install_tools() {
         }
     };
 
+    pull_docker_image_if_needed(&docker).await;
+    run_enygmah_docker_image(&docker).await;
+}
+
+async fn pull_docker_image_if_needed(docker: &Docker) -> String {
     let images = &docker
         .list_images(Some(ListImagesOptions::<String> {
             all: true,
@@ -136,8 +143,7 @@ pub async fn install_tools() {
         }
     };
 
-    println!("{}", docker_image_id);
-    // run the docker_image_id image
+    docker_image_id
 }
 
 fn get_docker_image_id(images: &Vec<ImageSummary>) -> Option<String> {
@@ -153,4 +159,96 @@ fn get_docker_image_id(images: &Vec<ImageSummary>) -> Option<String> {
     }
 
     docker_image_id
+}
+
+fn get_docker_container_id(containers: &Vec<ContainerSummary>) -> Option<String> {
+    let mut docker_container_id: Option<String> = None;
+    for container in containers {
+        let container_image_name = container.image.as_deref().expect("");
+        let container_name = container.names.as_deref().expect("").first().expect("");
+        if container_name.contains(&"enygmah".to_string())
+            && container_image_name.contains(&"hotay/enygmah".to_string())
+        {
+            docker_container_id = Some(container.id.clone().expect(""));
+            break;
+        }
+    }
+
+    docker_container_id
+}
+
+async fn run_enygmah_docker_image(docker: &Docker) {
+    let containers = &docker
+        .list_containers(Some(ListContainersOptions::<String> {
+            all: true,
+            ..Default::default()
+        }))
+        .await
+        .unwrap();
+
+    match get_docker_container_id(&containers) {
+        Some(_) => {
+            let container_options = Some(StartContainerOptions::<String> {
+                ..Default::default()
+            });
+            match docker.start_container("enygmah", container_options).await {
+                Ok(result) => {
+                    debug!("Starting container: {:?}", result);
+                }
+                Err(err) => {
+                    error!(
+                        "It wasn't possible to run enygmah docker container. Output:\n{}",
+                        err
+                    );
+                    process::exit(1);
+                }
+            }
+        }
+        None => {
+            let container_options = Some(CreateContainerOptions {
+                name: "enygmah",
+                ..Default::default()
+            });
+
+            let container_config = Config {
+                image: Some("hotay/enygmah"),
+                ..Default::default()
+            };
+
+            let container_id = match docker
+                .create_container(container_options, container_config)
+                .await
+            {
+                Ok(result) => {
+                    debug!("enygmah docker container created: {:?}", &result);
+                    result.id
+                }
+                Err(err) => {
+                    error!(
+                        "An error occured while creating the enygmah docker container. Output:\n{}",
+                        err
+                    );
+                    process::exit(1);
+                }
+            };
+
+            match docker.start_container::<String>(&container_id, None).await {
+                Ok(result) => {
+                    debug!("Started docker container: {:?}", result);
+                }
+                Err(err) => {
+                    error!(
+                        "Failed starting the enygmah docker container. Output:\n{}",
+                        err
+                    );
+                    process::exit(1);
+                }
+            }
+        }
+    }
+
+    println!(
+        "{} container ready to use. Scanning...",
+        String::from(" INFO ").on_cyan().white().bold()
+    );
 }
