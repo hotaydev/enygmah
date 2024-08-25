@@ -56,7 +56,10 @@ async fn pull_docker_image_if_needed(docker: &Docker) -> String {
             id
         }
         None => {
-            println!("enygmah docker image not found, pulling...");
+            logger::create_log(
+                "enygmah docker image not found, pulling...",
+                logger::EnygmahLogType::Warn,
+            );
 
             let pull_options = Some(CreateImageOptions {
                 from_image: "hotay/enygmah",
@@ -125,7 +128,7 @@ async fn pull_docker_image_if_needed(docker: &Docker) -> String {
             multi_progress
                 .clear()
                 .expect("Failed removing progress bars...");
-            println!("Docker image pulled!");
+            logger::create_log("Docker image pulled!\n", logger::EnygmahLogType::Success);
 
             let updated_images_list = &docker
                 .list_images(Some(ListImagesOptions::<String> {
