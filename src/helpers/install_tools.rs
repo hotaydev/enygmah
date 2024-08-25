@@ -4,12 +4,13 @@ use bollard::{
     secret::{ContainerSummary, ImageSummary},
     Docker,
 };
-use colored::Colorize;
 
 use futures_util::StreamExt;
 use indicatif::{HumanBytes, MultiProgress, ProgressBar, ProgressStyle};
 use log::{debug, error, info};
 use std::{collections::HashMap, process};
+
+use super::logger;
 
 pub async fn install_tools() {
     let docker: Docker = match Docker::connect_with_local_defaults() {
@@ -247,8 +248,5 @@ async fn run_enygmah_docker_image(docker: &Docker) {
         }
     }
 
-    println!(
-        "{} container ready to use. Scanning...",
-        String::from(" INFO ").on_cyan().white().bold()
-    );
+    logger::create_log("Container ready to use.", logger::EnygmahLogType::Info);
 }
