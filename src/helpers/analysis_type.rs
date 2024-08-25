@@ -10,7 +10,7 @@ pub enum AnalysisType {
     WebApp,
 
     /// Mobile Application, for example an .apk or .aab
-    // MobileApp,
+    MobileApp,
 
     /// Local Source Code
     SourceCode,
@@ -43,9 +43,17 @@ pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
     let possible_path = Path::new(asset);
     if possible_path.is_dir() {
         return AnalysisType::SourceCode;
-
-    // TODO: Also check if it is a mobile app binary
     } else if possible_path.is_file() {
+        let mobile_app_extensions: [&str; 3] = ["apk", "aab", "ipa"];
+
+        if let Some(extension) = possible_path.extension().and_then(|e| e.to_str()) {
+            if mobile_app_extensions.contains(&extension) {
+                return AnalysisType::MobileApp;
+            }
+        } else {
+            debug!("File has no extension");
+        }
+
         return AnalysisType::Binary;
     }
 
@@ -59,6 +67,10 @@ pub fn log_analysis_type(asset_type: &AnalysisType) {
     match asset_type {
         AnalysisType::WebApp => logger::create_log(
             "Asset to be analyzed is a Web Application",
+            logger::EnygmahLogType::Info,
+        ),
+        AnalysisType::MobileApp => logger::create_log(
+            "Asset to be analyzed is a Mobile App",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::SourceCode => logger::create_log(
