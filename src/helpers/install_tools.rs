@@ -7,7 +7,7 @@ use bollard::{
 
 use futures_util::StreamExt;
 use indicatif::{HumanBytes, MultiProgress, ProgressBar, ProgressStyle};
-use log::{debug, error, info};
+use log::debug;
 use std::{collections::HashMap, process};
 
 use super::logger;
@@ -21,12 +21,15 @@ pub async fn install_tools() {
         Err(err) => {
             match err {
                 bollard::errors::Error::SocketNotFoundError(_) => {
-                    error!("It wasn't possible to connect to Docker Socket. Ensure that Docker is installed and running.");
+                    logger::create_log("It wasn't possible to connect to Docker Socket. Ensure that Docker is installed and running.", logger::EnygmahLogType::Error);
                 }
                 _ => {
-                    error!(
-                        "An error occurred trying to connect to docker socket: {}",
-                        err
+                    logger::create_log(
+                        &format!(
+                            "An error occurred trying to connect to docker socket: {}",
+                            err,
+                        ),
+                        logger::EnygmahLogType::Error,
                     );
                 }
             }
@@ -49,7 +52,7 @@ async fn pull_docker_image_if_needed(docker: &Docker) -> String {
 
     let docker_image_id: String = match get_docker_image_id(&images) {
         Some(id) => {
-            info!("enygmah docker image found.");
+            debug!("enygmah docker image found: {}", id);
             id
         }
         None => {
@@ -109,8 +112,11 @@ async fn pull_docker_image_if_needed(docker: &Docker) -> String {
                             }
                         }
                     }
-                    Err(e) => {
-                        error!("Failed pulling enygmah docker image. Error logs:\n{}", e);
+                    Err(err) => {
+                        logger::create_log(
+                            &format!("Failed pulling enygmah docker image. Error logs:\n{}", err,),
+                            logger::EnygmahLogType::Error,
+                        );
                         process::exit(1);
                     }
                 }
@@ -131,11 +137,14 @@ async fn pull_docker_image_if_needed(docker: &Docker) -> String {
 
             let new_id: String = match get_docker_image_id(&updated_images_list) {
                 Some(id) => {
-                    info!("enygmah docker image pulled.");
+                    debug!("enygmah docker image pulled: {}", id);
                     id
                 }
                 None => {
-                    error!("Failed pulling enygmah docker image. Try pulling manually with `docker pull hotay/enygmah`");
+                    logger::create_log(
+                        "Failed pulling enygmah docker image. Try pulling manually with `docker pull hotay/enygmah`",
+                        logger::EnygmahLogType::Error,
+                    );
                     process::exit(1);
                 }
             };
@@ -197,9 +206,12 @@ async fn run_enygmah_docker_image(docker: &Docker) {
                     debug!("Starting container: {:?}", result);
                 }
                 Err(err) => {
-                    error!(
-                        "It wasn't possible to run enygmah docker container. Output:\n{}",
-                        err
+                    logger::create_log(
+                        &format!(
+                            "It wasn't possible to run enygmah docker container. Output:\n{}",
+                            err
+                        ),
+                        logger::EnygmahLogType::Error,
                     );
                     process::exit(1);
                 }
@@ -225,9 +237,12 @@ async fn run_enygmah_docker_image(docker: &Docker) {
                     result.id
                 }
                 Err(err) => {
-                    error!(
-                        "An error occured while creating the enygmah docker container. Output:\n{}",
-                        err
+                    logger::create_log(
+                        &format!(
+                            "An error occured while creating the enygmah docker container. Output:\n{}",
+                            err
+                        ),
+                        logger::EnygmahLogType::Error,
                     );
                     process::exit(1);
                 }
@@ -238,9 +253,12 @@ async fn run_enygmah_docker_image(docker: &Docker) {
                     debug!("Started docker container: {:?}", result);
                 }
                 Err(err) => {
-                    error!(
-                        "Failed starting the enygmah docker container. Output:\n{}",
-                        err
+                    logger::create_log(
+                        &format!(
+                            "Failed starting the enygmah docker container. Output:\n{}",
+                            err
+                        ),
+                        logger::EnygmahLogType::Error,
                     );
                     process::exit(1);
                 }

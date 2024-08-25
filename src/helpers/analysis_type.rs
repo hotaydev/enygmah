@@ -1,5 +1,5 @@
 use bollard::{image::ListImagesOptions, Docker};
-use log::{debug, error};
+use log::debug;
 use std::{path::Path, process};
 use url::Url;
 
@@ -105,12 +105,18 @@ async fn asset_is_a_docker_image(asset: &String) -> Option<String> {
         Err(err) => {
             match err {
                 bollard::errors::Error::SocketNotFoundError(_) => {
-                    error!("It wasn't possible to connect to Docker Socket. Ensure that Docker is installed and running.");
+                    logger::create_log(
+                        "It wasn't possible to connect to Docker Socket. Ensure that Docker is installed and running.",
+                        logger::EnygmahLogType::Error,
+                    );
                 }
                 _ => {
-                    error!(
-                        "An error occurred trying to connect to docker socket: {}",
-                        err
+                    logger::create_log(
+                        &format!(
+                            "An error occurred trying to connect to docker socket: {}",
+                            err
+                        ),
+                        logger::EnygmahLogType::Error,
                     );
                 }
             }
