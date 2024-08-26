@@ -90,7 +90,7 @@ pub fn log_analysis_type(asset_type: &AnalysisType) {
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Undetected => logger::create_log(
-            "Type of the asset being analyzed wasn't detected.",
+            "Type of the asset being analyzed wasn't detected.\n",
             logger::EnygmahLogType::Warn,
         ),
     }
@@ -144,4 +144,28 @@ async fn asset_is_a_docker_image(asset: &String) -> Option<String> {
     }
 
     docker_image_id
+}
+
+pub fn get_analysis_text(asset_type: AnalysisType) -> String {
+    return match asset_type {
+        AnalysisType::WebApp => String::from("Web Application"),
+        AnalysisType::MobileApp => String::from("Mobile App"),
+        AnalysisType::SourceCode => String::from("Local Source Code"),
+        AnalysisType::RemoteRepository => String::from("Remote Code - Repository"),
+        AnalysisType::Binary => String::from("Binary Application"),
+        AnalysisType::DockerImage => String::from("Docker Image"),
+        AnalysisType::Undetected => String::from("Undetected"),
+    };
+}
+
+pub fn get_analysis_type(asset_text: &str) -> AnalysisType {
+    return match asset_text {
+        "Web Application" => AnalysisType::WebApp,
+        "Mobile App" => AnalysisType::MobileApp,
+        "Local Source Code" => AnalysisType::SourceCode,
+        "Remote Code - Repository" => AnalysisType::RemoteRepository,
+        "Binary Application" => AnalysisType::Binary,
+        "Docker Image" => AnalysisType::DockerImage,
+        _ => AnalysisType::Undetected,
+    };
 }
