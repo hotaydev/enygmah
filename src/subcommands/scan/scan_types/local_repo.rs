@@ -69,8 +69,7 @@ fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
 }
 
 async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
-    // Static Code Analisys can be made using: Trivy, Sonarqube, CppCheck, OsvScanner, GoSec, Semgrep and SpotBugs
-
+    // TODO: add analysis with Sonarqube, CppCheck, GoSec and SpotBugs
     tokio::join!(
         enygmah_docker::execute_command(
             docker,

@@ -15,7 +15,7 @@ pub enum Tools {
     // DockerBenchSecurity,
 
     /// https://github.com/snyk/cli
-    // Snyk, // Need to authenticate, so we'll use it later (also it doesn't work weel in Alpine Linux)
+    // Snyk, // Need to authenticate, so we'll use it later (also it doesn't work well in Alpine Linux)
 
     /// https://github.com/wpscanteam/wpscan
     WpScan,
@@ -37,9 +37,6 @@ pub enum Tools {
 
     /// https://github.com/MobSF/Mobile-Security-Framework-MobSF
     // MobSF,
-
-    /// https://github.com/splintchecker/splint
-    // Splint, // Some problems installing it into Docker Container
 
     /// https://github.com/danmar/cppcheck
     CppCheck,
