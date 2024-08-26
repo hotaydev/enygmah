@@ -66,27 +66,27 @@ pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
 pub fn log_analysis_type(asset_type: &AnalysisType) {
     match asset_type {
         AnalysisType::WebApp => logger::create_log(
-            "Asset to be analyzed is a Web Application",
+            "Asset to be analyzed is a Web Application\n",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::MobileApp => logger::create_log(
-            "Asset to be analyzed is a Mobile App",
+            "Asset to be analyzed is a Mobile App\n",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::SourceCode => logger::create_log(
-            "Asset to be analyzed is a Local Source Code",
+            "Asset to be analyzed is a Local Source Code\n",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::RemoteRepository => logger::create_log(
-            "Asset to be analyzed is a Remote Source Code",
+            "Asset to be analyzed is a Remote Source Code\n",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Binary => logger::create_log(
-            "Asset to be analyzed is a Binary",
+            "Asset to be analyzed is a Binary\n",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::DockerImage => logger::create_log(
-            "Asset to be analyzed is a Docker Image",
+            "Asset to be analyzed is a Docker Image\n",
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Undetected => logger::create_log(

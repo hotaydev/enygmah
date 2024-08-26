@@ -71,16 +71,32 @@ fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
 async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
     // Static Code Analisys can be made using: Trivy, Sonarqube, CppCheck, OsvScanner, GoSec, Semgrep and SpotBugs
 
-    // TODO: use parallel processing here
-    //
-    enygmah_docker::execute_command(
-        docker,
-        format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", container_path),
-    )
-    .await;
+    tokio::join!(
+        enygmah_docker::execute_command(
+            docker,
+            format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", container_path),
+        ),
+    
+        enygmah_docker::execute_command(
+            docker,
+            format!(
+                "osv-scanner scan --format json --output /home/enygmah/_outputs/osv-scanner.json {}",
+                container_path
+            ),
+        ),
+    
+        // TODO: see a way to allow users to do `semgrep login`, being able to run more advanced scans.
+        enygmah_docker::execute_command(
+            docker,
+            format!(
+                "semgrep scan --json --output /home/enygmah/_outputs/semgrep.json {}",
+                container_path
+            ),
+        ),
+    );
 }
 
 async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
     enygmah_docker::execute_command(docker, format!("rm -rf {}", container_path)).await;
-    enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
+    // enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
 }

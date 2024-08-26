@@ -24,6 +24,8 @@ RUN export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "a
     echo 'export PATH="$PATH:/usr/local/go/bin:/root/go/bin"' >> /etc/profile && \
     PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
 
+ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
+
 ##############################################################################################################
 
 
