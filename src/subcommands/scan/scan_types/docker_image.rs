@@ -1,3 +1,3 @@
-pub fn analyze(image: &String) {
+pub async fn analyze(image: &String) {
     println!("{}", image);
 }

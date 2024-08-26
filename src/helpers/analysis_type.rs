@@ -1,6 +1,6 @@
-use bollard::{image::ListImagesOptions, Docker};
+use bollard::image::ListImagesOptions;
 use log::debug;
-use std::{path::Path, process};
+use std::path::Path;
 use url::Url;
 
 use super::{docker::get_docker, logger};

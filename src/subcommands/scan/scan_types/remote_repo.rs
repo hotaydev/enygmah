@@ -1,3 +1,3 @@
-pub fn analyze(url: &String) {
+pub async fn analyze(url: &String) {
     println!("{}", url);
 }

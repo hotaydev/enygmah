@@ -1,7 +1,10 @@
-use crate::helpers::{docker::get_docker, logger};
-use bollard::container::UploadToContainerOptions;
+use crate::helpers::{
+    docker::{self, get_docker},
+    logger,
+};
+use bollard::{container::UploadToContainerOptions, Docker};
 use log::debug;
-use std::{fs::File, io::Read, path::Path, process};
+use std::{path::Path, process};
 use tar::Builder;
 
 pub async fn analyze(path: &String) {
@@ -33,37 +36,47 @@ pub async fn analyze(path: &String) {
         }
     };
 
+    let remote_container_path = format!("/home/enygmah/{}", folder_name);
     let upload_container_options = Some(UploadToContainerOptions {
-        path: format!("/home/enygmah/analyze/{}", folder_name),
+        path: "/home/enygmah/",
         ..Default::default()
     });
 
-    let mut file = create_tarball_from_folder(&code_path, folder_name);
-    let mut contents = Vec::new();
-    file.read_to_end(&mut contents).unwrap();
+    let file = create_tarball_from_folder(&code_path, folder_name);
 
     match docker
-        .upload_to_container("enygmah", upload_container_options, contents.into())
+        .upload_to_container("enygmah", upload_container_options, file.into())
         .await
     {
-        Ok(_) => {}
+        Ok(_) => {
+            execute_remote_analysis(&remote_container_path, &docker).await;
+            cleanup_copied_folder(&remote_container_path, &docker).await;
+        }
         Err(err) => {
-            logger::create_log("Ocurred and error while sending the folder to be analyzed in the container. Re-run with -v to see the verbose debug output.", logger::EnygmahLogType::Error);
+            logger::create_log("Ocurred and error while sending the folder to be analyzed in the container. Re-run with -vvv to see the verbose debug output.", logger::EnygmahLogType::Error);
             debug!("{}", err);
             process::exit(1);
         }
     };
 }
 
-fn create_tarball_from_folder(path: &Path, folder_name: &str) -> File {
-    let file = File::create(format!("{}.tar.gz", folder_name)).unwrap();
-    let mut tarball = Builder::new(file);
-
-    for single_file_path in path.read_dir().unwrap() {
-        tarball
-            .append_path(single_file_path.unwrap().path())
-            .unwrap();
-    }
+// TODO: avoid using .unwrap();
+fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
+    let mut tarball = Builder::new(Vec::new());
+    tarball.append_dir_all(folder_name, path).unwrap();
 
     tarball.into_inner().unwrap()
+}
+
+async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
+    // Static Code Analisys can be made using: Trivy, Sonarqube, CppCheck, OsvScanner, GoSec, Semgrep and SpotBugs
+
+    // TODO: use parallel processing here
+    // trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json /home/enygmah/<folder>
+    docker::execute_command(docker, vec!["ls", "-al", container_path]).await;
+}
+
+async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
+    docker::execute_command(docker, vec!["rm", "-rf", container_path]).await;
+    docker::execute_command(docker, vec!["rm", "-rf", "/home/enygmah/_outputs/"]).await;
 }

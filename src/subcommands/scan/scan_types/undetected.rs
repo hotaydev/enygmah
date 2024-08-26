@@ -1,14 +1,13 @@
-use crate::{
-    helpers::{
-        analysis_type::{get_analysis_text, get_analysis_type, AnalysisType},
-        logger::{self, EnygmahLogType},
-    },
-    subcommands::scan::analyze::analyze_asset_based_on_type,
+use crate::helpers::{
+    analysis_type::{get_analysis_text, get_analysis_type, AnalysisType},
+    logger::{self, EnygmahLogType},
 };
 use dialoguer::Select;
 
+use super::{binary, docker_image, local_repo, mobile_app, remote_repo, web_application};
+
 // TODO: ask the user for the asset type
-pub fn analyze(asset: &String) {
+pub async fn analyze(asset: &String) {
     let items = vec![
         get_analysis_text(AnalysisType::WebApp),
         get_analysis_text(AnalysisType::MobileApp),
@@ -32,5 +31,13 @@ pub fn analyze(asset: &String) {
         EnygmahLogType::Info,
     );
 
-    analyze_asset_based_on_type(asset, get_analysis_type(&items[selection]));
+    match get_analysis_type(&items[selection]) {
+        AnalysisType::WebApp => web_application::analyze(asset).await,
+        AnalysisType::MobileApp => mobile_app::analyze(asset).await,
+        AnalysisType::SourceCode => local_repo::analyze(asset).await,
+        AnalysisType::RemoteRepository => remote_repo::analyze(asset).await,
+        AnalysisType::Binary => binary::analyze(asset).await,
+        AnalysisType::DockerImage => docker_image::analyze(asset).await,
+        AnalysisType::Undetected => {}
+    }
 }

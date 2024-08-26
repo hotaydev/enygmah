@@ -1,5 +1,5 @@
 use bollard::{
-    container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
+    container::{Config, CreateContainerOptions, ListContainersOptions},
     image::{CreateImageOptions, ListImagesOptions},
     secret::{ContainerSummary, ImageSummary},
     Docker,
@@ -10,7 +10,10 @@ use indicatif::{HumanBytes, MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
 use std::{collections::HashMap, process};
 
-use super::{docker::get_docker, logger};
+use super::{
+    docker::{get_docker, start_enygmah_container},
+    logger,
+};
 
 pub async fn install_tools() {
     let docker = get_docker();
@@ -179,24 +182,7 @@ async fn run_enygmah_docker_image(docker: &Docker) {
 
     match get_docker_container_id(&containers) {
         Some(_) => {
-            let container_options = Some(StartContainerOptions::<String> {
-                ..Default::default()
-            });
-            match docker.start_container("enygmah", container_options).await {
-                Ok(result) => {
-                    debug!("Starting container: {:?}", result);
-                }
-                Err(err) => {
-                    logger::create_log(
-                        &format!(
-                            "It wasn't possible to run enygmah docker container. Output:\n{}",
-                            err
-                        ),
-                        logger::EnygmahLogType::Error,
-                    );
-                    process::exit(1);
-                }
-            }
+            start_enygmah_container(docker).await;
         }
         None => {
             let container_options = Some(CreateContainerOptions {
@@ -209,13 +195,13 @@ async fn run_enygmah_docker_image(docker: &Docker) {
                 ..Default::default()
             };
 
-            let container_id = match docker
+            match docker
                 .create_container(container_options, container_config)
                 .await
             {
                 Ok(result) => {
                     debug!("enygmah docker container created: {:?}", &result);
-                    result.id
+                    start_enygmah_container(docker).await;
                 }
                 Err(err) => {
                     logger::create_log(
@@ -228,22 +214,6 @@ async fn run_enygmah_docker_image(docker: &Docker) {
                     process::exit(1);
                 }
             };
-
-            match docker.start_container::<String>(&container_id, None).await {
-                Ok(result) => {
-                    debug!("Started docker container: {:?}", result);
-                }
-                Err(err) => {
-                    logger::create_log(
-                        &format!(
-                            "Failed starting the enygmah docker container. Output:\n{}",
-                            err
-                        ),
-                        logger::EnygmahLogType::Error,
-                    );
-                    process::exit(1);
-                }
-            }
         }
     }
 

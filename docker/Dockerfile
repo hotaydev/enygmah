@@ -11,7 +11,7 @@ WORKDIR /home/enygmah
 ############################# Installing needed tools for the Security tools we'll use #######################
 
 RUN apk update && \
-    apk add --no-cache gcc g++ make git curl wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash
+    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash
 
 ## Upgrading RubyGems and pip
 RUN gem update --system 3.5.17 --no-document && \
@@ -30,7 +30,7 @@ RUN export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "a
 ################################### Installing Security tools we'll use ######################################
 
 # Install Trivy:
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3
+RUN wget -O- -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.54.1
 
 ## Installing OSV-Scanner
 RUN /usr/local/go/bin/go install github.com/google/osv-scanner/cmd/osv-scanner@v1
