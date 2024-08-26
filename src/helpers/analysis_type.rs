@@ -3,7 +3,7 @@ use log::debug;
 use std::{path::Path, process};
 use url::Url;
 
-use super::logger;
+use super::{docker::get_docker, logger};
 
 pub enum AnalysisType {
     /// Web Application for a dinamyc analysis
@@ -97,33 +97,7 @@ pub fn log_analysis_type(asset_type: &AnalysisType) {
 }
 
 async fn asset_is_a_docker_image(asset: &String) -> Option<String> {
-    let docker: Docker = match Docker::connect_with_local_defaults() {
-        Ok(res) => {
-            debug!("Docker instance: {:#?}", res);
-            res
-        }
-        Err(err) => {
-            match err {
-                bollard::errors::Error::SocketNotFoundError(_) => {
-                    logger::create_log(
-                        "It wasn't possible to connect to Docker Socket. Ensure that Docker is installed and running.",
-                        logger::EnygmahLogType::Error,
-                    );
-                }
-                _ => {
-                    logger::create_log(
-                        &format!(
-                            "An error occurred trying to connect to docker socket: {}",
-                            err
-                        ),
-                        logger::EnygmahLogType::Error,
-                    );
-                }
-            }
-
-            process::exit(1);
-        }
-    };
+    let docker = get_docker();
 
     let images = docker
         .list_images(Some(ListImagesOptions::<String> {

@@ -10,32 +10,10 @@ use indicatif::{HumanBytes, MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
 use std::{collections::HashMap, process};
 
-use super::logger;
+use super::{docker::get_docker, logger};
 
 pub async fn install_tools() {
-    let docker: Docker = match Docker::connect_with_local_defaults() {
-        Ok(res) => {
-            debug!("Docker instance: {:#?}", res);
-            res
-        }
-        Err(err) => {
-            match err {
-                bollard::errors::Error::SocketNotFoundError(_) => {
-                    logger::create_log("It wasn't possible to connect to Docker Socket. Ensure that Docker is installed and running.", logger::EnygmahLogType::Error);
-                }
-                _ => {
-                    logger::create_log(
-                        &format!(
-                            "An error occurred trying to connect to docker socket: {}",
-                            err,
-                        ),
-                        logger::EnygmahLogType::Error,
-                    );
-                }
-            }
-            process::exit(1);
-        }
-    };
+    let docker = get_docker();
 
     pull_docker_image_if_needed(&docker).await;
     run_enygmah_docker_image(&docker).await;
