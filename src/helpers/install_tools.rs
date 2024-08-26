@@ -11,7 +11,7 @@ use log::debug;
 use std::{collections::HashMap, process};
 
 use super::{
-    docker::{get_docker, start_enygmah_container},
+    enygmah_docker::{get_docker, start_enygmah_container},
     logger,
 };
 

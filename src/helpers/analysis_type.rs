@@ -3,7 +3,7 @@ use log::debug;
 use std::path::Path;
 use url::Url;
 
-use super::{docker::get_docker, logger};
+use super::{enygmah_docker::get_docker, logger};
 
 pub enum AnalysisType {
     /// Web Application for a dinamyc analysis

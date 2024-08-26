@@ -44,6 +44,7 @@ pub async fn start_enygmah_container(docker: &Docker) {
     match docker.start_container("enygmah", container_options).await {
         Ok(result) => {
             debug!("Starting container: {:?}", result);
+            execute_command(docker, String::from("mkdir /home/enygmah/_outputs")).await;
         }
         Err(err) => {
             logger::create_log(
@@ -58,12 +59,14 @@ pub async fn start_enygmah_container(docker: &Docker) {
     }
 }
 
-pub async fn execute_command(docker: &Docker, command: Vec<&str>) {
+pub async fn execute_command(docker: &Docker, command: String) {
     let exec = docker
         .create_exec(
             "enygmah",
             CreateExecOptions {
-                cmd: Some(command),
+                cmd: Some(command.split(" ").collect::<Vec<&str>>()),
+                attach_stdout: Some(true),
+                attach_stderr: Some(true),
                 ..Default::default()
             },
         )
