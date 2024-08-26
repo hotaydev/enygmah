@@ -1,2 +1,2 @@
 pub mod analyze;
-pub mod assets;
+pub mod scan_types;

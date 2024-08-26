@@ -1,7 +1,7 @@
 use crate::helpers::analysis_type::{detect_analysis_type, log_analysis_type, AnalysisType};
 use crate::helpers::install_tools;
 
-use super::assets::{
+use super::scan_types::{
     binary, docker_image, local_repo, mobile_app, remote_repo, undetected, web_application,
 };
 
