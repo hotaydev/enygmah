@@ -1,13 +1,14 @@
 use bollard::Docker;
+use indicatif::ProgressBar;
 
-use super::{enygmah_docker, sonarqube, tools::Tools};
+use super::{enygmah_docker, logger, sonarqube, tools::Tools};
 
-pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker) {
+pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBar) {
     match tool {
-        Tools::Trivy => trivy(asset, docker).await,
-        Tools::Sonarqube => sonarqube(asset, docker).await,
-        Tools::Semgrep => semgrep(asset, docker).await,
-        Tools::OsvScanner => osv_scanner(asset, docker).await,
+        Tools::Trivy => trivy(asset, docker, pb).await,
+        Tools::Sonarqube => sonarqube(asset, docker, pb).await,
+        Tools::Semgrep => semgrep(asset, docker, pb).await,
+        Tools::OsvScanner => osv_scanner(asset, docker, pb).await,
         // Tools::GoSec => println!("{}", asset),
         // Tools::WpScan => println!("{}", asset),
         // Tools::OwaspZapProxy => println!("{}", asset),
@@ -23,14 +24,20 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker) {
     }
 }
 
-async fn trivy(asset: &str, docker: &Docker) {
+async fn trivy(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Trivy      | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", asset),
     ).await;
+    pb.finish_with_message(logger::create_log_text(
+        "Trivy",
+        logger::EnygmahLogType::Success,
+    ));
 }
 
-async fn osv_scanner(asset: &str, docker: &Docker) {
+async fn osv_scanner(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("OsvScanner | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!(
@@ -39,10 +46,15 @@ async fn osv_scanner(asset: &str, docker: &Docker) {
         ),
     )
     .await;
+    pb.finish_with_message(logger::create_log_text(
+        "OsvScanner",
+        logger::EnygmahLogType::Success,
+    ));
 }
 
 // TODO: see a way to allow users to do `semgrep login`, being able to run more advanced scans.
-async fn semgrep(asset: &str, docker: &Docker) {
+async fn semgrep(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Semgrep    | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!(
@@ -51,8 +63,21 @@ async fn semgrep(asset: &str, docker: &Docker) {
         ),
     )
     .await;
+    pb.finish_with_message(logger::create_log_text(
+        "Semgrep",
+        logger::EnygmahLogType::Success,
+    ));
 }
 
-async fn sonarqube(asset: &str, docker: &Docker) {
+async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Sonarqube  | Scanning...");
     sonarqube::start(docker, asset).await;
+    pb.finish_with_message(logger::create_log_text(
+        "Sonarqube",
+        logger::EnygmahLogType::Success,
+    ));
+
+    // To get the final results we can use the following API requests:
+    // curl -u <user>:<pass> -X GET "http://localhost:9000/api/hotspots/search?project=enygmah&ps=500&p=1&status=TO_REVIEW,REVIEWED"
+    // curl -u <user>:<pass> -X GET "http://localhost:9000/api/issues/search?components=enygmah&ps=500&p=1&severities=INFO,MINOR,MAJOR,CRITICAL,BLOCKER&statuses=OPEN,CONFIRMED&types=CODE_SMELL,BUG,VULNERABILITY"
 }

@@ -4,8 +4,9 @@ use crate::helpers::{
     tools::Tools,
 };
 use bollard::{container::UploadToContainerOptions, Docker};
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
-use std::{path::Path, process};
+use std::{path::Path, process, time::Duration};
 use tar::Builder;
 
 pub async fn analyze(path: &String) {
@@ -43,6 +44,11 @@ pub async fn analyze(path: &String) {
         ..Default::default()
     });
 
+    logger::create_log(
+        "Creating tarball from the directory...",
+        logger::EnygmahLogType::Info,
+    );
+
     let file = create_tarball_from_folder(&code_path, folder_name);
 
     match docker
@@ -50,6 +56,10 @@ pub async fn analyze(path: &String) {
         .await
     {
         Ok(_) => {
+            logger::create_log(
+                "Uploaded tarball to the container to be analysed",
+                logger::EnygmahLogType::Info,
+            );
             execute_remote_analysis(&remote_container_path, &docker).await;
             cleanup_copied_folder(&remote_container_path, &docker).await;
         }
@@ -71,12 +81,36 @@ fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
 
 async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
     // TODO: add analysis with Sonarqube, CppCheck, GoSec and SpotBugs
+
+    println!(""); // add a space
+
+    logger::create_log("Starting analysis...\n", logger::EnygmahLogType::MainStep);
+
+    let m = MultiProgress::new();
+
     tokio::join!(
-        scan::run_scan(Tools::Trivy, container_path, docker),
-        scan::run_scan(Tools::OsvScanner, container_path, docker),
-        scan::run_scan(Tools::Semgrep, container_path, docker),
-        scan::run_scan(Tools::Sonarqube, container_path, docker),
+        create_progress_bar_and_run_scan(Tools::Trivy, container_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::OsvScanner, container_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::Semgrep, container_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
+}
+
+async fn create_progress_bar_and_run_scan(
+    tool: Tools,
+    asset: &str,
+    docker: &Docker,
+    m: &MultiProgress,
+) {
+    let spinner = m.add(ProgressBar::new_spinner());
+    spinner.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["⨁︎", "⨂︎", "⨁︎", "⨂︎"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    spinner.enable_steady_tick(Duration::from_millis(100));
+    scan::run_scan(tool, asset, docker, &spinner).await;
 }
 
 async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
