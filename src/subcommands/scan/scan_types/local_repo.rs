@@ -6,7 +6,16 @@ use crate::helpers::{
 use bollard::{container::UploadToContainerOptions, Docker};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
-use std::{path::Path, process, time::Duration};
+use std::{
+    io::Write,
+    path::Path,
+    process,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
 use tar::Builder;
 
 pub async fn analyze(path: &String) {
@@ -44,9 +53,12 @@ pub async fn analyze(path: &String) {
         ..Default::default()
     });
 
-    logger::create_log(
-        "Creating tarball from the directory...",
-        logger::EnygmahLogType::Info,
+    let loading = Arc::new(AtomicBool::new(true));
+    let loading_clone = Arc::clone(&loading);
+
+    let handle = logger::create_loading_log(
+        String::from("Creating tarball from the directory"),
+        loading_clone,
     );
 
     let file = create_tarball_from_folder(&code_path, folder_name);
@@ -56,10 +68,20 @@ pub async fn analyze(path: &String) {
         .await
     {
         Ok(_) => {
+            loading.store(false, Ordering::SeqCst);
+            handle.join().unwrap();
+
+            print!("{}", "\x1B[?25h"); // Show the cursor again
+            print!("\r{}{}", "\x1B[F", "\r"); // Delete the line that was keep in blank to separate the "loading message"
+            std::io::stdout().flush().unwrap();
+
             logger::create_log(
-                "Uploaded tarball to the container to be analysed",
+                "Tarball uploaded to the container to be analysed",
                 logger::EnygmahLogType::Info,
             );
+            print!("{}", "\x1B[2K");
+            std::io::stdout().flush().unwrap();
+
             execute_remote_analysis(&remote_container_path, &docker).await;
             cleanup_copied_folder(&remote_container_path, &docker).await;
         }

@@ -36,7 +36,7 @@ async fn main() {
         .init();
 
     println!(
-        "\n{}\n",
+        "\n{} / The all-in-one scanner\n",
         String::from(" -> enygmah ").on_blue().white().bold()
     );
 
