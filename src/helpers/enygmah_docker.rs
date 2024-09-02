@@ -1,8 +1,10 @@
-use std::process;
+use std::{collections::HashMap, process};
 
 use bollard::{
-    container::StartContainerOptions,
+    container::{Config, CreateContainerOptions, StartContainerOptions},
     exec::{CreateExecOptions, StartExecResults},
+    network::{CreateNetworkOptions, ListNetworksOptions},
+    secret::HostConfig,
     Docker,
 };
 use futures_util::StreamExt;
@@ -59,6 +61,44 @@ pub async fn start_enygmah_container(docker: &Docker) {
     }
 }
 
+pub async fn create_enygmah_container(docker: &Docker) {
+    let container_options = Some(CreateContainerOptions {
+        name: "enygmah",
+        ..Default::default()
+    });
+
+    create_network(docker).await;
+
+    let container_config = Config {
+        image: Some("hotay/enygmah"),
+        host_config: Some(HostConfig {
+            network_mode: Some(String::from("enygmah-network")),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
+
+    match docker
+        .create_container(container_options, container_config)
+        .await
+    {
+        Ok(result) => {
+            debug!("enygmah docker container created: {:?}", &result);
+            start_enygmah_container(docker).await;
+        }
+        Err(err) => {
+            logger::create_log(
+                &format!(
+                    "An error occured while creating the enygmah docker container. Output:\n{}",
+                    err
+                ),
+                logger::EnygmahLogType::Error,
+            );
+            process::exit(1);
+        }
+    };
+}
+
 pub async fn execute_command(docker: &Docker, command: String) {
     let exec = docker
         .create_exec(
@@ -80,5 +120,41 @@ pub async fn execute_command(docker: &Docker, command: String) {
         while let Some(Ok(msg)) = output.next().await {
             debug!("{msg}");
         }
+    }
+}
+
+async fn create_network(docker: &Docker) {
+    // First check if the network alreaty exists
+
+    let networks = docker
+        .list_networks(Some(ListNetworksOptions {
+            filters: HashMap::from([("name", vec!["enygmah-network"])]),
+            ..Default::default()
+        }))
+        .await
+        .unwrap();
+
+    if networks.len() == 0 {
+        match docker
+            .create_network(CreateNetworkOptions {
+                name: "enygmah-network",
+                ..Default::default()
+            })
+            .await
+        {
+            Ok(response) => {
+                debug!("Created docker network: {:?}", response);
+            }
+            Err(err) => {
+                logger::create_log(
+                    &format!(
+                        "An error occured while creating the enygmah docker network. Output:\n{}",
+                        err
+                    ),
+                    logger::EnygmahLogType::Error,
+                );
+                process::exit(1);
+            }
+        };
     }
 }

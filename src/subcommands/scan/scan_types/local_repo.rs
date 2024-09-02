@@ -1,6 +1,6 @@
 use crate::helpers::{
     enygmah_docker::{self, get_docker},
-    logger,
+    logger, sonarqube,
 };
 use bollard::{container::UploadToContainerOptions, Docker};
 use log::debug;
@@ -75,7 +75,7 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
             docker,
             format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", container_path),
         ),
-    
+
         enygmah_docker::execute_command(
             docker,
             format!(
@@ -83,7 +83,7 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
                 container_path
             ),
         ),
-    
+
         // TODO: see a way to allow users to do `semgrep login`, being able to run more advanced scans.
         enygmah_docker::execute_command(
             docker,
@@ -92,6 +92,8 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
                 container_path
             ),
         ),
+
+        sonarqube::start(docker, container_path),
     );
 }
 

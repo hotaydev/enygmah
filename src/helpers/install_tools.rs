@@ -1,5 +1,5 @@
 use bollard::{
-    container::{Config, CreateContainerOptions, ListContainersOptions},
+    container::ListContainersOptions,
     image::{CreateImageOptions, ListImagesOptions},
     secret::{ContainerSummary, ImageSummary},
     Docker,
@@ -11,7 +11,7 @@ use log::debug;
 use std::{collections::HashMap, process};
 
 use super::{
-    enygmah_docker::{get_docker, start_enygmah_container},
+    enygmah_docker::{create_enygmah_container, get_docker, start_enygmah_container},
     logger,
 };
 
@@ -185,35 +185,7 @@ async fn run_enygmah_docker_image(docker: &Docker) {
             start_enygmah_container(docker).await;
         }
         None => {
-            let container_options = Some(CreateContainerOptions {
-                name: "enygmah",
-                ..Default::default()
-            });
-
-            let container_config = Config {
-                image: Some("hotay/enygmah"),
-                ..Default::default()
-            };
-
-            match docker
-                .create_container(container_options, container_config)
-                .await
-            {
-                Ok(result) => {
-                    debug!("enygmah docker container created: {:?}", &result);
-                    start_enygmah_container(docker).await;
-                }
-                Err(err) => {
-                    logger::create_log(
-                        &format!(
-                            "An error occured while creating the enygmah docker container. Output:\n{}",
-                            err
-                        ),
-                        logger::EnygmahLogType::Error,
-                    );
-                    process::exit(1);
-                }
-            };
+            create_enygmah_container(docker).await;
         }
     }
 

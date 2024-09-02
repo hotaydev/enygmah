@@ -3,7 +3,7 @@ pub enum Tools {
     Trivy,
 
     /// https://github.com/SonarSource/sonarqube
-    // Sonarqube,
+    Sonarqube,
 
     /// https://github.com/google/osv-scanner
     OsvScanner,
