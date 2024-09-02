@@ -244,9 +244,9 @@ async fn run_sonarqube_scan(docker: &Docker, container_path: &str) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "cd {} && sonar-scanner -D sonar.login=admin -D sonar.password=admin -D sonar.host.url=http://sonarqube-enygmah:9000 -D sonar.projectKey={}",
-            container_path,
+            "sonar-scanner -D sonar.login=admin -D sonar.password=admin -D sonar.host.url=http://sonarqube-enygmah:9000 -D sonar.projectKey={} -D sonar.sources={}",
             Path::new(container_path).file_name().unwrap().to_str().unwrap(),
+            container_path,
         ),
     ).await;
 }

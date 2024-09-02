@@ -1,6 +1,7 @@
 use crate::helpers::{
     enygmah_docker::{self, get_docker},
-    logger, sonarqube,
+    logger, scan,
+    tools::Tools,
 };
 use bollard::{container::UploadToContainerOptions, Docker};
 use log::debug;
@@ -71,33 +72,15 @@ fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
 async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
     // TODO: add analysis with Sonarqube, CppCheck, GoSec and SpotBugs
     tokio::join!(
-        enygmah_docker::execute_command(
-            docker,
-            format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", container_path),
-        ),
-
-        enygmah_docker::execute_command(
-            docker,
-            format!(
-                "osv-scanner scan --format json --output /home/enygmah/_outputs/osv-scanner.json {}",
-                container_path
-            ),
-        ),
-
-        // TODO: see a way to allow users to do `semgrep login`, being able to run more advanced scans.
-        enygmah_docker::execute_command(
-            docker,
-            format!(
-                "semgrep scan --json --output /home/enygmah/_outputs/semgrep.json {}",
-                container_path
-            ),
-        ),
-
-        sonarqube::start(docker, container_path),
+        scan::run_scan(Tools::Trivy, container_path, docker),
+        scan::run_scan(Tools::OsvScanner, container_path, docker),
+        scan::run_scan(Tools::Semgrep, container_path, docker),
+        scan::run_scan(Tools::Sonarqube, container_path, docker),
     );
 }
 
 async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
     enygmah_docker::execute_command(docker, format!("rm -rf {}", container_path)).await;
+    // TODO: organize results before deleting the folder below
     // enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
 }
