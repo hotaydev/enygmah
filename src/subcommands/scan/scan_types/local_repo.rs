@@ -104,6 +104,7 @@ pub async fn analyze(path: &String) {
 // TODO: avoid using .unwrap();
 fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
     let mut tarball: Builder<Vec<u8>> = Builder::new(Vec::new());
+    // TODO: check first if every file exists (thread panicks when some file/folder is deleted while compressing)
     tarball.append_dir_all(folder_name, path).unwrap();
 
     tarball.into_inner().unwrap()

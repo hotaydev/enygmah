@@ -88,6 +88,9 @@ async fn semgrep(asset: &str, docker: &Docker, pb: &ProgressBar) {
 }
 
 async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Sonarqube  | Pulling docker image...");
+    sonarqube::download_sonarqube_if_needed(docker).await;
+
     pb.set_message("Sonarqube  | Scanning...");
     sonarqube::start(docker, asset).await;
     pb.set_style(

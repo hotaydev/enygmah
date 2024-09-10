@@ -1,5 +1,3 @@
-// sonar-scanner -D sonar.login=admin -D sonar.password=sonar -D sonar.host.url=http://sonarqube-enygmah:9000 -D sonar.projectKey=<project>
-// Health check: curl -u admin:admin -X GET "http://localhost:9000/api/system/status"
 use super::{enygmah_docker, logger};
 use bollard::{
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
@@ -9,9 +7,8 @@ use bollard::{
     Docker,
 };
 use futures_util::StreamExt;
-use indicatif::{HumanBytes, MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
-use std::{collections::HashMap, path::Path, process, time::Duration};
+use std::{path::Path, process, time::Duration};
 use tokio::time::sleep;
 
 // We will use the Sonarqube only when it's really needed (for local/remote source code).
@@ -19,8 +16,6 @@ use tokio::time::sleep;
 
 // TODO: before starting we need to follow these instructions depending on the user platform: https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/pre-installation/linux/
 pub async fn start(docker: &Docker, container_path: &str) {
-    download_sonarqube_if_needed(docker).await;
-
     let containers = &docker
         .list_containers(Some(ListContainersOptions::<String> {
             all: true,
@@ -101,7 +96,7 @@ async fn start_sonarqube_container(docker: &Docker) {
     }
 }
 
-async fn download_sonarqube_if_needed(docker: &Docker) {
+pub async fn download_sonarqube_if_needed(docker: &Docker) {
     let images = &docker
         .list_images(Some(ListImagesOptions::<String> {
             all: true,
@@ -115,12 +110,6 @@ async fn download_sonarqube_if_needed(docker: &Docker) {
             debug!("Sonarqube docker image found: {}", id);
         }
         None => {
-            println!(""); // Just add a space to the terminal console
-            logger::create_log(
-                "Sonarqube docker image not found, pulling...",
-                logger::EnygmahLogType::Warn,
-            );
-
             let pull_options = Some(CreateImageOptions {
                 from_image: "sonarqube",
                 tag: "community",
@@ -129,52 +118,9 @@ async fn download_sonarqube_if_needed(docker: &Docker) {
 
             let mut stream = docker.create_image(pull_options, None, None);
 
-            // Initialize MultiProgress to manage multiple progress bars
-            let multi_progress = MultiProgress::new();
-            let progress_style: ProgressStyle = ProgressStyle::default_bar()
-                .template("[{elapsed_precise}] {wide_bar:.cyan/blue} {msg}")
-                .unwrap()
-                .progress_chars("##-");
-
-            // HashMap to store progress bars by id
-            let mut progress_bars: HashMap<String, (ProgressBar, i64, i64)> = HashMap::new();
-
             while let Some(result) = stream.next().await {
                 match result {
-                    Ok(create_image_info) => {
-                        if let Some(id) = &create_image_info.id {
-                            if let Some(progress_detail) = &create_image_info.progress_detail {
-                                let current = progress_detail.current.unwrap_or(0);
-                                let total = progress_detail.total.unwrap_or(0);
-
-                                if total != 0 && total != 0 {
-                                    // Get or create a progress bar for this id
-                                    let (progress_bar, _, _) =
-                                        progress_bars.entry(id.clone()).or_insert_with(|| {
-                                            let pb =
-                                                multi_progress.add(ProgressBar::new(total as u64));
-                                            pb.set_style(progress_style.clone());
-                                            pb.set_message(format!("layer {}", id.clone()));
-                                            (pb, 0, 0)
-                                        });
-
-                                    // Update the progress bar with the current value
-                                    progress_bar.set_position(current as u64);
-                                    progress_bar.set_length(total as u64);
-
-                                    if current == total {
-                                        progress_bar.finish_with_message("Done");
-                                    } else {
-                                        progress_bar.set_message(format!(
-                                            "{}/{}",
-                                            HumanBytes(current as u64),
-                                            HumanBytes(total as u64)
-                                        ));
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    Ok(_) => {}
                     Err(err) => {
                         logger::create_log(
                             &format!(
@@ -187,20 +133,12 @@ async fn download_sonarqube_if_needed(docker: &Docker) {
                     }
                 }
             }
-
-            multi_progress
-                .clear()
-                .expect("Failed removing progress bars...");
-            logger::create_log(
-                "Sonarqube Docker image pulled!\n",
-                logger::EnygmahLogType::Success,
-            );
         }
     };
 }
 
 fn get_docker_image_id(images: &Vec<ImageSummary>) -> Option<String> {
-    let search_tag = "hotay/enygmah".to_string();
+    let search_tag = "sonarqube".to_string();
     let mut docker_image_id: Option<String> = None;
     for image in images {
         for tag in image.repo_tags.iter() {
