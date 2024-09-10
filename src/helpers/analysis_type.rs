@@ -1,4 +1,5 @@
 use bollard::image::ListImagesOptions;
+use colored::Colorize;
 use log::debug;
 use std::path::Path;
 use url::Url;
@@ -66,27 +67,27 @@ pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
 pub fn log_analysis_type(asset_type: &AnalysisType) {
     match asset_type {
         AnalysisType::WebApp => logger::create_log(
-            "Asset to be analyzed is a Web Application",
+            &format!("Asset to be analyzed is a {}", "Web Application".bold()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::MobileApp => logger::create_log(
-            "Asset to be analyzed is a Mobile App",
+            &format!("Asset to be analyzed is a {}", "Mobile App".bold()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::SourceCode => logger::create_log(
-            "Asset to be analyzed is a Local Source Code",
+            &format!("Asset to be analyzed is a {}", "Local Source Code".bold()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::RemoteRepository => logger::create_log(
-            "Asset to be analyzed is a Remote Source Code",
+            &format!("Asset to be analyzed is a {}", "Remote Source Code".bold()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Binary => logger::create_log(
-            "Asset to be analyzed is a Binary",
+            &format!("Asset to be analyzed is a {}", "Binary".bold()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::DockerImage => logger::create_log(
-            "Asset to be analyzed is a Docker Image",
+            &format!("Asset to be analyzed is a {}", "Docker Image".bold()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Undetected => logger::create_log(

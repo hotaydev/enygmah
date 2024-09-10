@@ -1,5 +1,4 @@
 use clap::{Parser, Subcommand};
-use clap_verbosity_flag::Verbosity;
 use colored::Colorize;
 
 mod helpers;
@@ -8,8 +7,8 @@ mod subcommands;
 #[derive(Parser)]
 #[command(version, about, long_about = None)] // It's read from Cargo.toml
 struct Cli {
-    #[command(flatten)]
-    verbose: Verbosity,
+    #[arg(short, long, action = clap::ArgAction::Count, help = "Enable debug mode")]
+    debug: u8,
 
     #[command(subcommand)]
     command: Option<Commands>,
@@ -26,13 +25,18 @@ enum Commands {
 
 #[tokio::main]
 async fn main() {
-    let cli = Cli::parse();
+    let cli: Cli = Cli::parse();
 
     // Initialized the logger accordingly to the verbosity level defined by clap arguments
     // TODO: use log::{error, warn, info, debug, trace};
     // as mentioned here: https://docs.rs/env_logger/latest/env_logger/#example
     env_logger::Builder::new()
-        .filter_level(cli.verbose.log_level_filter())
+        .filter_level(match cli.debug {
+            0 => log::LevelFilter::Warn,  // Default
+            1 => log::LevelFilter::Debug, // -d -> Debug
+            2 => log::LevelFilter::Trace, // -dd -> Trace
+            _ => log::LevelFilter::Trace, // All others go from Trace
+        })
         .init();
 
     println!(

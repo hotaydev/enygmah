@@ -1,5 +1,5 @@
 use bollard::Docker;
-use indicatif::ProgressBar;
+use indicatif::{ProgressBar, ProgressStyle};
 
 use super::{enygmah_docker, logger, sonarqube, tools::Tools};
 
@@ -30,6 +30,12 @@ async fn trivy(asset: &str, docker: &Docker, pb: &ProgressBar) {
         docker,
         format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", asset),
     ).await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
     pb.finish_with_message(logger::create_log_text(
         "Trivy",
         logger::EnygmahLogType::Success,
@@ -46,6 +52,12 @@ async fn osv_scanner(asset: &str, docker: &Docker, pb: &ProgressBar) {
         ),
     )
     .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
     pb.finish_with_message(logger::create_log_text(
         "OsvScanner",
         logger::EnygmahLogType::Success,
@@ -63,6 +75,12 @@ async fn semgrep(asset: &str, docker: &Docker, pb: &ProgressBar) {
         ),
     )
     .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
     pb.finish_with_message(logger::create_log_text(
         "Semgrep",
         logger::EnygmahLogType::Success,
@@ -72,6 +90,12 @@ async fn semgrep(asset: &str, docker: &Docker, pb: &ProgressBar) {
 async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Sonarqube  | Scanning...");
     sonarqube::start(docker, asset).await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
     pb.finish_with_message(logger::create_log_text(
         "Sonarqube",
         logger::EnygmahLogType::Success,
