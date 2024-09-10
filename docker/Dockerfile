@@ -1,4 +1,4 @@
-FROM alpine:3.20@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5
+FROM alpine:3.20@sha256:beefdbd8a1da6d2915566fde36db9db0b524eb737fc57cd1367effd16dc0d06d
 
 LABEL maintainer="Taylor Hoffmann <taylor@hotay.dev>"
 LABEL version="1.0.0"
@@ -14,13 +14,13 @@ RUN apk update && \
     apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl
 
 ## Upgrading RubyGems and pip
-RUN gem update --system 3.5.17 --no-document && \
+RUN gem update --system 3.5.18 --no-document && \
     python3 -m pip install --upgrade pip --break-system-packages
 
 ## Installing Go Lang
-RUN export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "arm64"; else echo "amd64"; fi) && wget --secure-protocol=TLSv1_2 --max-redirect=1 "https://go.dev/dl/go1.23.0.linux-${packageArch}.tar.gz" && \
-    tar -C /usr/local -xzf ./go1.23.0.linux-*.tar.gz && \
-    rm -rf ./go1.23.0.linux-*.tar.gz && \
+RUN export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "arm64"; else echo "amd64"; fi) && wget --secure-protocol=TLSv1_2 --max-redirect=1 "https://go.dev/dl/go1.23.1.linux-${packageArch}.tar.gz" && \
+    tar -C /usr/local -xzf ./go*.linux-*.tar.gz && \
+    rm -rf ./go*.linux-*.tar.gz && \
     echo 'export PATH="$PATH:/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin"' >> /etc/profile && \
     PATH="/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:${PATH}"
 
@@ -32,7 +32,7 @@ ENV PATH="/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:${PATH
 ################################### Installing Security tools we'll use ######################################
 
 # Install Trivy:
-RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 -O- -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.54.1
+RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 -O- -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.55.0
 
 ## Installing OSV-Scanner
 RUN /usr/local/go/bin/go install github.com/google/osv-scanner/cmd/osv-scanner@v1
@@ -48,7 +48,7 @@ RUN apk add --no-cache cppcheck
 
 ## Install SpotBugs
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/spotbugs/spotbugs/releases/download/4.8.6/spotbugs-4.8.6.tgz && \
-    tar -xzf spotbugs-4.8.6.tgz && rm -rf spotbugs-4.8.6.tgz && mv ./spotbugs-4.8.6 /usr/local/bin/spotbugs-src && \
+    tar -xzf spotbugs-*.tgz && rm -rf spotbugs-*.tgz && mv ./spotbugs-* /usr/local/bin/spotbugs-src && \
     chmod +x /usr/local/bin/spotbugs-src/bin/spotbugs && \
     echo -e "#!/bin/bash\n\nsh /usr/local/bin/spotbugs-src/bin/spotbugs\n" > /usr/local/bin/spotbugs && \
     chmod +x /usr/local/bin/spotbugs
@@ -65,9 +65,9 @@ RUN python3 -m pip install semgrep --break-system-packages
 
 ## Install Owasp Zap Proxy
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Crossplatform.zip && \
-    unzip ZAP_2.15.0_Crossplatform.zip && \
-    rm -rf ZAP_2.15.0_Crossplatform.zip && \
-    mv ZAP_2.15.0 /usr/local/bin/ZAP-proxy && \
+    unzip ZAP_*_Crossplatform.zip && \
+    rm -rf ZAP_*_Crossplatform.zip && \
+    mv ZAP_* /usr/local/bin/ZAP-proxy && \
     echo -e "#!/bin/bash\n\nbash /usr/local/bin/ZAP-proxy/zap.sh\n" > /usr/local/bin/zap && \
     chmod +x /usr/local/bin/zap
 
