@@ -3,12 +3,16 @@ use crate::helpers::{
     logger, scan,
     tools::Tools,
 };
-use bollard::{container::UploadToContainerOptions, Docker};
+use bollard::{
+    container::{DownloadFromContainerOptions, UploadToContainerOptions},
+    Docker,
+};
+use futures_util::StreamExt;
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
 use std::{
     io::Write,
-    path::Path,
+    path::{Path, PathBuf},
     process,
     sync::{
         atomic::{AtomicBool, Ordering},
@@ -17,9 +21,10 @@ use std::{
     time::Duration,
 };
 use tar::Builder;
+use tokio::{fs::File, io::AsyncWriteExt};
 
 pub async fn analyze(path: &String) {
-    let code_path = match Path::new(path).canonicalize() {
+    let code_path: PathBuf = match Path::new(path).canonicalize() {
         Ok(value) => value,
         Err(err) => {
             logger::create_log(
@@ -36,9 +41,9 @@ pub async fn analyze(path: &String) {
         process::exit(1);
     }
 
-    let docker = get_docker();
+    let docker: Docker = get_docker();
 
-    let folder_name = match code_path.file_name() {
+    let folder_name: &str = match code_path.file_name() {
         Some(value) => value
             .to_str()
             .expect("Generic error, failed to convert OsStr to str"),
@@ -47,11 +52,7 @@ pub async fn analyze(path: &String) {
         }
     };
 
-    let remote_container_path = format!("/home/enygmah/{}", folder_name);
-    let upload_container_options = Some(UploadToContainerOptions {
-        path: "/home/enygmah/",
-        ..Default::default()
-    });
+    let remote_container_path: String = format!("/home/enygmah/{}", folder_name);
 
     let loading = Arc::new(AtomicBool::new(true));
     let loading_clone = Arc::clone(&loading);
@@ -61,10 +62,17 @@ pub async fn analyze(path: &String) {
         loading_clone,
     );
 
-    let file = create_tarball_from_folder(&code_path, folder_name);
+    let file: Vec<u8> = create_tarball_from_folder(&code_path, folder_name);
 
     match docker
-        .upload_to_container("enygmah", upload_container_options, file.into())
+        .upload_to_container(
+            "enygmah",
+            Some(UploadToContainerOptions {
+                path: "/home/enygmah/",
+                ..Default::default()
+            }),
+            file.into(),
+        )
         .await
     {
         Ok(_) => {
@@ -95,27 +103,46 @@ pub async fn analyze(path: &String) {
 
 // TODO: avoid using .unwrap();
 fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
-    let mut tarball = Builder::new(Vec::new());
+    let mut tarball: Builder<Vec<u8>> = Builder::new(Vec::new());
     tarball.append_dir_all(folder_name, path).unwrap();
 
     tarball.into_inner().unwrap()
 }
 
 async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
-    // TODO: add analysis with Sonarqube, CppCheck, GoSec and SpotBugs
-
     println!(""); // add a space
 
     logger::create_log("Starting analysis...\n", logger::EnygmahLogType::MainStep);
 
-    let m = MultiProgress::new();
+    let m: MultiProgress = MultiProgress::new();
 
     tokio::join!(
+        // TODO: add CppCheck, GoSec and SpotBugs
         create_progress_bar_and_run_scan(Tools::Trivy, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::OsvScanner, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Semgrep, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
+
+    // TODO: Instead of downloading the tarball, we should add this ti a local .enygmah folder and serve the results in a web server.
+    let mut file: File = File::create("output.tar").await.unwrap();
+
+    // Download the content from the container as a stream
+    let mut stream = docker.download_from_container(
+        "enygmah",
+        Some(DownloadFromContainerOptions {
+            path: "/home/enygmah/_outputs/",
+        }),
+    );
+
+    // Write the stream to the file
+    while let Some(chunk) = stream.next().await {
+        let data = chunk.unwrap();
+        file.write_all(&data).await.unwrap();
+    }
+
+    // Ensure the file is properly flushed
+    file.flush().await.unwrap();
 }
 
 async fn create_progress_bar_and_run_scan(
@@ -124,7 +151,7 @@ async fn create_progress_bar_and_run_scan(
     docker: &Docker,
     m: &MultiProgress,
 ) {
-    let spinner = m.add(ProgressBar::new_spinner());
+    let spinner: ProgressBar = m.add(ProgressBar::new_spinner());
     spinner.set_style(
         ProgressStyle::default_spinner()
             .tick_strings(&["⨁︎", "⨂︎", "⨁︎", "⨂︎"])
@@ -137,6 +164,5 @@ async fn create_progress_bar_and_run_scan(
 
 async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
     enygmah_docker::execute_command(docker, format!("rm -rf {}", container_path)).await;
-    // TODO: organize results before deleting the folder below
-    // enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
+    enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
 }
