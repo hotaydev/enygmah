@@ -121,11 +121,13 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
         // TODO: add CppCheck, GoSec and SpotBugs
         create_progress_bar_and_run_scan(Tools::Trivy, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::OsvScanner, container_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::CppCheck, container_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::GoSec, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Semgrep, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
 
-    // TODO: Instead of downloading the tarball, we should add this ti a local .enygmah folder and serve the results in a web server.
+    // TODO: Instead of downloading the tarball, we should add this to a local .enygmah folder and serve the results in a web server.
     let mut file: File = File::create("output.tar").await.unwrap();
 
     // Download the content from the container as a stream

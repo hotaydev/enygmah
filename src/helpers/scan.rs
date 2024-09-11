@@ -9,11 +9,11 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::Sonarqube => sonarqube(asset, docker, pb).await,
         Tools::Semgrep => semgrep(asset, docker, pb).await,
         Tools::OsvScanner => osv_scanner(asset, docker, pb).await,
-        // Tools::GoSec => println!("{}", asset),
+        Tools::CppCheck => cppcheck(asset, docker, pb).await,
+        Tools::GoSec => gosec(asset, docker, pb).await,
         // Tools::WpScan => println!("{}", asset),
         // Tools::OwaspZapProxy => println!("{}", asset),
         // Tools::SpotBugs => println!("{}", asset),
-        // Tools::CppCheck => println!("{}", asset),
 
         // Tools::MobSF => println!("{}", asset),
         // Tools::Nikto => println!("{}", asset),
@@ -64,6 +64,74 @@ async fn osv_scanner(asset: &str, docker: &Docker, pb: &ProgressBar) {
     ));
 }
 
+async fn cppcheck(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("CppCheck   | Scanning...");
+
+    // Execute CppCheck analysis
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --error-exitcode=0 --xml --xml-version=2 --quiet {} 2> /home/enygmah/_outputs/cppcheck_report.xml",
+            asset
+        ),
+    )
+    .await;
+
+    // Convert the CppCheck XML report to JSON
+    enygmah_docker::execute_command(
+        docker,
+        String::from("yq -p=xml -o=json /home/enygmah/_outputs/cppcheck_report.xml > /home/enygmah/_outputs/cppcheck_report.json"),
+    )
+    .await;
+
+    // Remove the CppCheck XML report
+    enygmah_docker::execute_command(
+        docker,
+        String::from("rm -f /home/enygmah/_outputs/cppcheck_report.xml"),
+    )
+    .await;
+
+    // Remove the CppCheck JSON report if it's empty due to a lack of .c/.cpp files
+    enygmah_docker::execute_command(
+        docker,
+        String::from("if [ `cat /home/enygmah/_outputs/cppcheck_report.json` = \"null\" ]; then rm -f /home/enygmah/_outputs/cppcheck_report.json; fi"),
+    )
+    .await;
+
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "CppCheck",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn gosec(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Gosec      | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "gosec -fmt=json -no-fail -nosec -show-ignored -out=/home/enygmah/_outputs/gosec.json {}/...",
+            asset
+        ),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "Gosec",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
 // TODO: see a way to allow users to do `semgrep login`, being able to run more advanced scans.
 async fn semgrep(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Semgrep    | Scanning...");
@@ -104,7 +172,7 @@ async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
         logger::EnygmahLogType::Success,
     ));
 
-    // To get the final results we can use the following API requests:
+    // TODO: To get the final results we can use the following API requests:
     // curl -u <user>:<pass> -X GET "http://localhost:9000/api/hotspots/search?project=enygmah&ps=500&p=1&status=TO_REVIEW,REVIEWED"
     // curl -u <user>:<pass> -X GET "http://localhost:9000/api/issues/search?components=enygmah&ps=500&p=1&severities=INFO,MINOR,MAJOR,CRITICAL,BLOCKER&statuses=OPEN,CONFIRMED&types=CODE_SMELL,BUG,VULNERABILITY"
 }

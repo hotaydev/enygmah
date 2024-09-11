@@ -38,13 +38,15 @@ RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 -O- -q https://raw.githubuse
 RUN /usr/local/go/bin/go install github.com/google/osv-scanner/cmd/osv-scanner@v1
 
 ## Install GoSec
-RUN /usr/local/go/bin/go install github.com/securego/gosec/cmd/gosec@latest
+RUN /usr/local/go/bin/go install github.com/securego/gosec/v2/cmd/gosec@latest
 
 ## Install WpScan
 RUN gem install wpscan --no-document
 
 ## Install CppCheck
-RUN apk add --no-cache cppcheck
+RUN apk add --no-cache cppcheck && \
+    export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "arm64"; else echo "amd64"; fi) && \    
+    wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${packageArch}" -O /usr/bin/yq && chmod +x /usr/bin/yq
 
 ## Install SpotBugs
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/spotbugs/spotbugs/releases/download/4.8.6/spotbugs-4.8.6.tgz && \

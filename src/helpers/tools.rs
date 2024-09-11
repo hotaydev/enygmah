@@ -9,7 +9,7 @@ pub enum Tools {
     OsvScanner,
 
     // https://github.com/securego/gosec
-    // GoSec,
+    GoSec,
 
     // https://github.com/docker/docker-bench-security
     // DockerBenchSecurity,
@@ -41,5 +41,5 @@ pub enum Tools {
     // MobSF,
 
     // https://github.com/danmar/cppcheck
-    // CppCheck,
+    CppCheck,
 }
