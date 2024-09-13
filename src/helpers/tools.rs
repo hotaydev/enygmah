@@ -34,8 +34,9 @@ pub enum Tools {
 
     // https://github.com/semgrep/semgrep
     Semgrep,
+
     // https://github.com/spotbugs/spotbugs
-    // SpotBugs,
+    SpotBugs,
 
     // https://github.com/MobSF/Mobile-Security-Framework-MobSF
     // MobSF,

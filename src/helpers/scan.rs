@@ -11,9 +11,9 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::OsvScanner => osv_scanner(asset, docker, pb).await,
         Tools::CppCheck => cppcheck(asset, docker, pb).await,
         Tools::GoSec => gosec(asset, docker, pb).await,
+        Tools::SpotBugs => spotbugs(asset, docker, pb).await,
         // Tools::WpScan => println!("{}", asset),
         // Tools::OwaspZapProxy => println!("{}", asset),
-        // Tools::SpotBugs => println!("{}", asset),
 
         // Tools::MobSF => println!("{}", asset),
         // Tools::Nikto => println!("{}", asset),
@@ -71,7 +71,7 @@ async fn cppcheck(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --error-exitcode=0 --xml --xml-version=2 --quiet {} 2> /home/enygmah/_outputs/cppcheck_report.xml",
+            "cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --error-exitcode=0 --xml --xml-version=2 --quiet {} 2> /home/enygmah/_outputs/cppcheck.xml",
             asset
         ),
     )
@@ -80,21 +80,21 @@ async fn cppcheck(asset: &str, docker: &Docker, pb: &ProgressBar) {
     // Convert the CppCheck XML report to JSON
     enygmah_docker::execute_command(
         docker,
-        String::from("yq -p=xml -o=json /home/enygmah/_outputs/cppcheck_report.xml > /home/enygmah/_outputs/cppcheck_report.json"),
+        String::from("yq -p=xml -o=json /home/enygmah/_outputs/cppcheck.xml > /home/enygmah/_outputs/cppcheck.json"),
     )
     .await;
 
     // Remove the CppCheck XML report
     enygmah_docker::execute_command(
         docker,
-        String::from("rm -f /home/enygmah/_outputs/cppcheck_report.xml"),
+        String::from("rm -f /home/enygmah/_outputs/cppcheck.xml"),
     )
     .await;
 
     // Remove the CppCheck JSON report if it's empty due to a lack of .c/.cpp files
     enygmah_docker::execute_command(
         docker,
-        String::from("if [ `cat /home/enygmah/_outputs/cppcheck_report.json` = \"null\" ]; then rm -f /home/enygmah/_outputs/cppcheck_report.json; fi"),
+        String::from("if [ `cat /home/enygmah/_outputs/cppcheck.json` = \"null\" ]; then rm -f /home/enygmah/_outputs/cppcheck.json; fi"),
     )
     .await;
 
@@ -106,6 +106,52 @@ async fn cppcheck(asset: &str, docker: &Docker, pb: &ProgressBar) {
     );
     pb.finish_with_message(logger::create_log_text(
         "CppCheck",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn spotbugs(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("SpotBugs   | Scanning...");
+
+    // Execute SpotBugs analysis
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "java -jar /usr/local/bin/spotbugs-src/lib/spotbugs.jar -textui -low -progress -exitcode=0 -xml=/home/enygmah/_outputs/spotbugs.xml {}",
+            asset
+        ),
+    )
+    .await;
+
+    // Convert the SpotBugs XML report to JSON
+    enygmah_docker::execute_command(
+        docker,
+        String::from("yq -p=xml -o=json /home/enygmah/_outputs/spotbugs.xml > /home/enygmah/_outputs/spotbugs.json"),
+    )
+    .await;
+
+    // Remove the SpotBugs XML report
+    enygmah_docker::execute_command(
+        docker,
+        String::from("rm -f /home/enygmah/_outputs/spotbugs.xml"),
+    )
+    .await;
+
+    // Remove the SpotBugs JSON report if it's empty due to the project being in other langages than Java
+    enygmah_docker::execute_command(
+        docker,
+        String::from("if [ `cat /home/enygmah/_outputs/spotbugs.json` = \"null\" ]; then rm -f /home/enygmah/_outputs/spotbugs.json; fi"),
+    )
+    .await;
+
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "SpotBugs",
         logger::EnygmahLogType::Success,
     ));
 }

@@ -51,9 +51,6 @@ RUN apk add --no-cache cppcheck && \
 ## Install SpotBugs
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/spotbugs/spotbugs/releases/download/4.8.6/spotbugs-4.8.6.tgz && \
     tar -xzf spotbugs-*.tgz && rm -rf spotbugs-*.tgz && mv ./spotbugs-* /usr/local/bin/spotbugs-src && \
-    chmod +x /usr/local/bin/spotbugs-src/bin/spotbugs && \
-    echo -e "#!/bin/bash\n\nsh /usr/local/bin/spotbugs-src/bin/spotbugs\n" > /usr/local/bin/spotbugs && \
-    chmod +x /usr/local/bin/spotbugs
 
 ## Install sonar-scanner
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477.zip && \
@@ -63,7 +60,6 @@ RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://binaries.sonarsource
 
 ## Install Semgrep
 RUN python3 -m pip install semgrep --break-system-packages
-# Use with `semgrep scan`
 
 ## Install Owasp Zap Proxy
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Crossplatform.zip && \

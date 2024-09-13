@@ -124,6 +124,7 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
         create_progress_bar_and_run_scan(Tools::CppCheck, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::GoSec, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Semgrep, container_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::SpotBugs, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
 
