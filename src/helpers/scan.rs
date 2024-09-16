@@ -217,8 +217,4 @@ async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
         "Sonarqube",
         logger::EnygmahLogType::Success,
     ));
-
-    // TODO: To get the final results we can use the following API requests:
-    // curl -u <user>:<pass> -X GET "http://localhost:9000/api/hotspots/search?project=enygmah&ps=500&p=1&status=TO_REVIEW,REVIEWED"
-    // curl -u <user>:<pass> -X GET "http://localhost:9000/api/issues/search?components=enygmah&ps=500&p=1&severities=INFO,MINOR,MAJOR,CRITICAL,BLOCKER&statuses=OPEN,CONFIRMED&types=CODE_SMELL,BUG,VULNERABILITY"
 }

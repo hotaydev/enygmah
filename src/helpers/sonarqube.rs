@@ -79,9 +79,6 @@ async fn start_sonarqube_container(docker: &Docker) {
     {
         Ok(result) => {
             debug!("Starting Sonarqube container: {:?}", result);
-            // TODO: Await it to completelly start and then execute the following command:
-            // curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password?login=admin&previousPassword=admin&password=sonar"
-            // The scan is actually working without changing the password... se if we can get results without changing the pass (it would be less steps to run :) )
         }
         Err(err) => {
             logger::create_log(
@@ -185,6 +182,9 @@ async fn run_sonarqube_scan(docker: &Docker, container_path: &str) {
         .to_str()
         .unwrap();
 
+    enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/.scannerwork"))
+        .await;
+
     enygmah_docker::execute_command(
         docker,
         format!(
@@ -198,22 +198,45 @@ async fn run_sonarqube_scan(docker: &Docker, container_path: &str) {
 }
 
 async fn get_analysis_results(docker: &Docker, project_key: &str) {
-    // TODO: curl is with troubles to get the hostname:port
-    enygmah_docker::execute_command(
-        docker,
-        format!(
-            "curl -u admin:admin -X GET http://sonarqube-enygmah:9000/api/hotspots/search?project={}&ps=500&p=1 > /home/enygmah/_outputs/sonarqube_hotspots.json",
-            project_key,
-        ),
-    ).await;
+    // It wasn't possible to use interpolation directly in the CURL command, as it's being used in other parts of the code.
+    // CURL was displaying errors related to bad hostname, incorrect port number, and others.
+    // So, as a solution, all the command parts were splitted and then joined, making it work.
 
-    enygmah_docker::execute_command(
-        docker,
-        format!(
-            "curl -u admin:admin -X GET http://sonarqube-enygmah:9000/api/issues/search?components={}&ps=500&p=1&severities=INFO,MINOR,MAJOR,CRITICAL,BLOCKER&types=CODE_SMELL,BUG,VULNERABILITY > /home/enygmah/_outputs/sonarqube_issues.json",
-            project_key,
-        ),
-    ).await;
+    let hotspots_url = format!(
+        "http://sonarqube-enygmah:9000/api/hotspots/search?project={}&ps=500&p=1",
+        project_key
+    );
+    let issues_url = format!(
+        "sonarqube-enygmah:9000/api/issues/search?components={}&ps=500&p=1&severities=INFO,MINOR,MAJOR,CRITICAL,BLOCKER&types=CODE_SMELL,BUG,VULNERABILITY",
+        project_key
+    );
+
+    let hotspots_command = Vec::from([
+        "curl",
+        "-q",
+        "-u",
+        "admin:admin",
+        "-X",
+        "GET",
+        &hotspots_url,
+        "-o",
+        "/home/enygmah/_outputs/sonarqube_hotspots.json",
+    ]);
+
+    let issues_command = Vec::from([
+        "curl",
+        "-q",
+        "-u",
+        "admin:admin",
+        "-X",
+        "GET",
+        &issues_url,
+        "-o",
+        "/home/enygmah/_outputs/sonarqube_issues.json",
+    ]);
+
+    enygmah_docker::execute_command(docker, hotspots_command.join(" ")).await;
+    enygmah_docker::execute_command(docker, issues_command.join(" ")).await;
 }
 
 async fn check_if_sonarqube_is_ready(docker: &Docker) -> String {
