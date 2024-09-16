@@ -3,11 +3,7 @@ use crate::helpers::{
     logger, scan,
     tools::Tools,
 };
-use bollard::{
-    container::{DownloadFromContainerOptions, UploadToContainerOptions},
-    Docker,
-};
-use futures_util::StreamExt;
+use bollard::{container::UploadToContainerOptions, Docker};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use log::debug;
 use std::{
@@ -21,7 +17,6 @@ use std::{
     time::Duration,
 };
 use tar::Builder;
-use tokio::{fs::File, io::AsyncWriteExt};
 
 pub async fn analyze(path: &String) {
     let code_path: PathBuf = match Path::new(path).canonicalize() {
@@ -127,26 +122,30 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
         create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
 
-    // TODO: Instead of downloading the tarball, we should add this to a local .enygmah folder and serve the results in a web server.
-    let mut file: File = File::create("output.tar").await.unwrap();
-
-    // Download the content from the container as a stream
-    let mut stream = docker.download_from_container(
-        "enygmah",
-        Some(DownloadFromContainerOptions {
-            path: "/home/enygmah/_outputs/",
-        }),
-    );
-
-    // Write the stream to the file
-    while let Some(chunk) = stream.next().await {
-        let data = chunk.unwrap();
-        file.write_all(&data).await.unwrap();
-    }
-
-    // Ensure the file is properly flushed
-    file.flush().await.unwrap();
+    // Commented because just want to download the results when debugging
+    // download_results_from_container(docker).await;
 }
+
+// async fn download_results_from_container(docker: &Docker) {
+//     let mut file: File = File::create("output.tar").await.unwrap();
+
+//     // Download the content from the container as a stream
+//     let mut stream = docker.download_from_container(
+//         "enygmah",
+//         Some(DownloadFromContainerOptions {
+//             path: "/home/enygmah/_outputs/",
+//         }),
+//     );
+
+//     // Write the stream to the file
+//     while let Some(chunk) = stream.next().await {
+//         let data = chunk.unwrap();
+//         file.write_all(&data).await.unwrap();
+//     }
+
+//     // Ensure the file is properly flushed
+//     file.flush().await.unwrap();
+// }
 
 async fn create_progress_bar_and_run_scan(
     tool: Tools,
