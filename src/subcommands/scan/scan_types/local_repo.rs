@@ -105,7 +105,7 @@ fn create_tarball_from_folder(path: &Path, folder_name: &str) -> Vec<u8> {
     tarball.into_inner().unwrap()
 }
 
-async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
+pub async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
     println!(""); // add a space
 
     logger::create_log("Starting analysis...\n", logger::EnygmahLogType::MainStep);
@@ -122,30 +122,8 @@ async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
         create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
 
-    // Commented because just want to download the results when debugging
-    // download_results_from_container(docker).await;
+    // TODO: get results from _outputs folder and display them in a beautyful report/page
 }
-
-// async fn download_results_from_container(docker: &Docker) {
-//     let mut file: File = File::create("output.tar").await.unwrap();
-
-//     // Download the content from the container as a stream
-//     let mut stream = docker.download_from_container(
-//         "enygmah",
-//         Some(DownloadFromContainerOptions {
-//             path: "/home/enygmah/_outputs/",
-//         }),
-//     );
-
-//     // Write the stream to the file
-//     while let Some(chunk) = stream.next().await {
-//         let data = chunk.unwrap();
-//         file.write_all(&data).await.unwrap();
-//     }
-
-//     // Ensure the file is properly flushed
-//     file.flush().await.unwrap();
-// }
 
 async fn create_progress_bar_and_run_scan(
     tool: Tools,
@@ -164,7 +142,7 @@ async fn create_progress_bar_and_run_scan(
     scan::run_scan(tool, asset, docker, &spinner).await;
 }
 
-async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
+pub async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
     enygmah_docker::execute_command(docker, format!("rm -rf {}", container_path)).await;
     enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
 }

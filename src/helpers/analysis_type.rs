@@ -29,15 +29,28 @@ pub enum AnalysisType {
     Undetected,
 }
 
+// TODO: add an option to allow the user to say which kind of application it is, without trying to detect
 pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
     if let Ok(parsed_url) = Url::parse(asset) {
-        // Check if the URL is from github.com
+        // TODO: we can test also if the input is just <user>/<repo>, without http, ssh, or .git at the final
+
+        // Test if the URL ends with .git
+        let url_path = parsed_url.path();
+        if url_path.ends_with(".git") {
+            return AnalysisType::RemoteRepository;
+        }
+
+        // It can also be a URL from a Git Registry, but without the .git extension
         if let Some(host) = parsed_url.host_str() {
-            if host == "github.com" {
+            if host.contains("github.com")
+                || host.contains("gitlab.com")
+                || host.contains("bitbucket.org")
+            {
                 return AnalysisType::RemoteRepository;
             }
         }
 
+        // If it isn't from a Git Repo, it's probably a Web Application
         return AnalysisType::WebApp;
     }
 
@@ -67,27 +80,42 @@ pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
 pub fn log_analysis_type(asset_type: &AnalysisType) {
     match asset_type {
         AnalysisType::WebApp => logger::create_log(
-            &format!("Asset to be analyzed is a {}", "Web Application".bold()),
+            &format!(
+                "Asset to be analyzed is a {}",
+                "Web Application".bold().underline()
+            ),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::MobileApp => logger::create_log(
-            &format!("Asset to be analyzed is a {}", "Mobile App".bold()),
+            &format!(
+                "Asset to be analyzed is a {}",
+                "Mobile App".bold().underline()
+            ),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::SourceCode => logger::create_log(
-            &format!("Asset to be analyzed is a {}", "Local Source Code".bold()),
+            &format!(
+                "Asset to be analyzed is a {}",
+                "Local Source Code".bold().underline()
+            ),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::RemoteRepository => logger::create_log(
-            &format!("Asset to be analyzed is a {}", "Remote Source Code".bold()),
+            &format!(
+                "Asset to be analyzed is a {}",
+                "Remote Source Code".bold().underline()
+            ),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Binary => logger::create_log(
-            &format!("Asset to be analyzed is a {}", "Binary".bold()),
+            &format!("Asset to be analyzed is a {}", "Binary".bold().underline()),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::DockerImage => logger::create_log(
-            &format!("Asset to be analyzed is a {}", "Docker Image".bold()),
+            &format!(
+                "Asset to be analyzed is a {}",
+                "Docker Image".bold().underline()
+            ),
             logger::EnygmahLogType::Info,
         ),
         AnalysisType::Undetected => logger::create_log(
