@@ -179,12 +179,39 @@ async fn execute_command_when_ready(docker: &Docker, container_path: &str) {
 }
 
 async fn run_sonarqube_scan(docker: &Docker, container_path: &str) {
+    let project_key: &str = Path::new(container_path)
+        .file_name()
+        .unwrap()
+        .to_str()
+        .unwrap();
+
     enygmah_docker::execute_command(
         docker,
         format!(
             "sonar-scanner -D sonar.login=admin -D sonar.password=admin -D sonar.host.url=http://sonarqube-enygmah:9000 -D sonar.projectKey={} -D sonar.sources={}",
-            Path::new(container_path).file_name().unwrap().to_str().unwrap(),
+            project_key,
             container_path,
+        ),
+    ).await;
+
+    get_analysis_results(docker, project_key).await;
+}
+
+async fn get_analysis_results(docker: &Docker, project_key: &str) {
+    // TODO: curl is with troubles to get the hostname:port
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "curl -u admin:admin -X GET http://sonarqube-enygmah:9000/api/hotspots/search?project={}&ps=500&p=1 > /home/enygmah/_outputs/sonarqube_hotspots.json",
+            project_key,
+        ),
+    ).await;
+
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "curl -u admin:admin -X GET http://sonarqube-enygmah:9000/api/issues/search?components={}&ps=500&p=1&severities=INFO,MINOR,MAJOR,CRITICAL,BLOCKER&types=CODE_SMELL,BUG,VULNERABILITY > /home/enygmah/_outputs/sonarqube_issues.json",
+            project_key,
         ),
     ).await;
 }
