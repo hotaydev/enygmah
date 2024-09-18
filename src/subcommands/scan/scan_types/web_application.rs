@@ -20,6 +20,8 @@ pub async fn execute_remote_analysis(url_path: &str, docker: &Docker) {
     tokio::join!(
         create_progress_bar_and_run_scan(Tools::WpScan, url_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::OwaspZapProxy, url_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::Nikto, url_path, docker, &m),
+        create_progress_bar_and_run_scan(Tools::Nuclei, url_path, docker, &m),
     );
 }
 

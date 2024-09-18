@@ -14,9 +14,9 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::SpotBugs => spotbugs(asset, docker, pb).await,
         Tools::WpScan => wpscan(asset, docker, pb).await,
         Tools::OwaspZapProxy => owaspzapproxy(asset, docker, pb).await,
+        Tools::Nikto => nikto(asset, docker, pb).await,
+        Tools::Nuclei => nuclei(asset, docker, pb).await,
         // Tools::MobSF => println!("{}", asset),
-        // Tools::Nikto => println!("{}", asset),
-        // Tools::Nuclei => println!("{}", asset),
         // Tools::DockerBenchSecurity => println!("{}", asset),
         // Tools::DockerScout => println!("{}", asset),
         // Tools::Snyk => println!("{}", asset),
@@ -242,7 +242,8 @@ async fn wpscan(asset: &str, docker: &Docker, pb: &ProgressBar) {
 }
 
 async fn owaspzapproxy(asset: &str, docker: &Docker, pb: &ProgressBar) {
-    pb.set_message("ZapProxy   | (This usually takes a while) Scanning...");
+    pb.set_message("ZapProxy   | (It takes a while) Scanning...");
+    enygmah_docker::execute_command(docker, String::from("rm -rf /root/.ZAP/")).await;
     enygmah_docker::execute_command(
         docker,
         format!(
@@ -259,6 +260,47 @@ async fn owaspzapproxy(asset: &str, docker: &Docker, pb: &ProgressBar) {
     );
     pb.finish_with_message(logger::create_log_text(
         "ZapProxy",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn nikto(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Nikto      | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!("/usr/local/bin/nikto/program/nikto.pl -followredirects -Format=json -host={} -nointeractive -output=/home/enygmah/_outputs/nikto.json", asset),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "Nikto",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn nuclei(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Nuclei     | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "nuclei -target={} -as -json-export=/home/enygmah/_outputs/nuclei.json -follow-redirects -max-redirects=2",
+            asset
+        ),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "Nuclei",
         logger::EnygmahLogType::Success,
     ));
 }

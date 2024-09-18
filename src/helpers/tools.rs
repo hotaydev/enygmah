@@ -27,10 +27,10 @@ pub enum Tools {
     OwaspZapProxy,
 
     // https://github.com/sullo/nikto
-    // Nikto,
+    Nikto,
 
     // https://github.com/projectdiscovery/nuclei
-    // Nuclei,
+    Nuclei,
 
     // https://github.com/semgrep/semgrep
     Semgrep,
@@ -41,11 +41,27 @@ pub enum Tools {
     // https://github.com/MobSF/Mobile-Security-Framework-MobSF
     // MobSF,
 
-    // https://github.com/danmar/cppcheck
-    CppCheck,
+    // https://github.com/google/oss-fuzz
+    // OSS-Fuzz
+
+    // https://github.com/deepfence/SecretScanner
+    // SecretScanner
+
+    // https://github.com/deepfence/ThreatMapper
+    // ThreatMapper
+
+    // https://wapiti-scanner.github.io/
+    // Wapiti
+
     // https://github.com/inspec/inspec
     // Inspec, // Used for writing custom rules for Docker Images
-    // Kubeverify
+
+    // https://github.com/aquasecurity/kube-bench
     // Kubebench
+
+    // https://github.com/prowler-cloud/prowler
     // Prowler
+
+    // https://github.com/danmar/cppcheck
+    CppCheck,
 }

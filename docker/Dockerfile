@@ -11,7 +11,7 @@ WORKDIR /home/enygmah
 ############################# Installing needed tools for the Security tools we'll use #######################
 
 RUN apk update && \
-    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl
+    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay
 
 ## Upgrading RubyGems and pip
 RUN gem update --system 3.5.18 --no-document && \
@@ -39,6 +39,12 @@ RUN /usr/local/go/bin/go install github.com/google/osv-scanner/cmd/osv-scanner@v
 
 ## Install GoSec
 RUN /usr/local/go/bin/go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+## Install Nuclei
+RUN /usr/local/go/bin/go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+
+## Install Nikto
+RUN git clone https://github.com/sullo/nikto.git /usr/local/bin/nikto
 
 ## Install WpScan
 RUN gem install wpscan --no-document
