@@ -43,4 +43,9 @@ pub enum Tools {
 
     // https://github.com/danmar/cppcheck
     CppCheck,
+    // https://github.com/inspec/inspec
+    // Inspec, // Used for writing custom rules for Docker Images
+    // Kubeverify
+    // Kubebench
+    // Prowler
 }

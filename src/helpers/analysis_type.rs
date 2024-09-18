@@ -36,7 +36,7 @@ pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
 
         // Test if the URL ends with .git
         let url_path = parsed_url.path();
-        if url_path.ends_with(".git") {
+        if url_path.starts_with("git@") || url_path.ends_with(".git") {
             return AnalysisType::RemoteRepository;
         }
 
@@ -45,6 +45,11 @@ pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
             if host.contains("github.com")
                 || host.contains("gitlab.com")
                 || host.contains("bitbucket.org")
+                || host.contains("git.launchpad.net")
+                || host.contains("pagure.io")
+                || host.contains("codeberg.org")
+                || host.contains("gitea.com")
+                || (host.contains("dev.azure.com") && url_path.contains("_git"))
             {
                 return AnalysisType::RemoteRepository;
             }
