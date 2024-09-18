@@ -1,7 +1,6 @@
-use crate::helpers::{
-    enygmah_docker::{self, get_docker},
-    logger, scan,
-    tools::Tools,
+use crate::{
+    helpers::{enygmah_docker::get_docker, logger, scan, tools::Tools},
+    subcommands::scan::hooks,
 };
 use bollard::{container::UploadToContainerOptions, Docker};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
@@ -86,7 +85,7 @@ pub async fn analyze(path: &String) {
             std::io::stdout().flush().unwrap();
 
             execute_remote_analysis(&remote_container_path, &docker).await;
-            cleanup_copied_folder(&remote_container_path, &docker).await;
+            hooks::post_scan::delete_created_folder(&docker, &remote_container_path).await;
         }
         Err(err) => {
             logger::create_log("Ocurred and error while sending the folder to be analyzed in the container. Re-run with -vvv to see the verbose debug output.", logger::EnygmahLogType::Error);
@@ -121,8 +120,6 @@ pub async fn execute_remote_analysis(container_path: &str, docker: &Docker) {
         create_progress_bar_and_run_scan(Tools::SpotBugs, container_path, docker, &m),
         create_progress_bar_and_run_scan(Tools::Sonarqube, container_path, docker, &m),
     );
-
-    // TODO: get results from _outputs folder and display them in a beautyful report/page
 }
 
 async fn create_progress_bar_and_run_scan(
@@ -140,9 +137,4 @@ async fn create_progress_bar_and_run_scan(
     );
     spinner.enable_steady_tick(Duration::from_millis(100));
     scan::run_scan(tool, asset, docker, &spinner).await;
-}
-
-pub async fn cleanup_copied_folder(container_path: &str, docker: &Docker) {
-    enygmah_docker::execute_command(docker, format!("rm -rf {}", container_path)).await;
-    enygmah_docker::execute_command(docker, String::from("rm -rf /home/enygmah/_outputs/")).await;
 }

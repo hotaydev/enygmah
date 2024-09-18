@@ -10,6 +10,8 @@ use bollard::{
 use futures_util::StreamExt;
 use log::debug;
 
+use crate::subcommands::scan::hooks;
+
 use super::logger;
 
 pub fn get_docker() -> Docker {
@@ -46,7 +48,7 @@ pub async fn start_enygmah_container(docker: &Docker) {
     match docker.start_container("enygmah", container_options).await {
         Ok(result) => {
             debug!("Starting container: {:?}", result);
-            execute_command(docker, String::from("mkdir /home/enygmah/_outputs")).await;
+            hooks::pre_scan::run(Some(docker)).await;
         }
         Err(err) => {
             logger::create_log(

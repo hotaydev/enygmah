@@ -3,6 +3,7 @@ use std::process;
 use crate::helpers::analysis_type::{detect_analysis_type, log_analysis_type, AnalysisType};
 use crate::helpers::{install_tools, logger};
 
+use super::hooks;
 use super::scan_types::{
     binary, docker_image, local_repo, mobile_app, remote_repo, undetected, web_application,
 };
@@ -17,7 +18,9 @@ pub async fn analyze(asset: &String) {
     let analyze = detect_analysis_type(asset).await;
     log_analysis_type(&analyze);
 
+    hooks::pre_scan::run(None).await;
     analyze_asset_based_on_type(asset, analyze).await;
+    hooks::post_scan::clean_up().await;
 }
 
 pub async fn analyze_asset_based_on_type(asset: &String, analysis_type: AnalysisType) {

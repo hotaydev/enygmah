@@ -12,9 +12,8 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::CppCheck => cppcheck(asset, docker, pb).await,
         Tools::GoSec => gosec(asset, docker, pb).await,
         Tools::SpotBugs => spotbugs(asset, docker, pb).await,
-        // Tools::WpScan => println!("{}", asset),
-        // Tools::OwaspZapProxy => println!("{}", asset),
-
+        Tools::WpScan => wpscan(asset, docker, pb).await,
+        Tools::OwaspZapProxy => owaspzapproxy(asset, docker, pb).await,
         // Tools::MobSF => println!("{}", asset),
         // Tools::Nikto => println!("{}", asset),
         // Tools::Nuclei => println!("{}", asset),
@@ -215,6 +214,51 @@ async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
     );
     pb.finish_with_message(logger::create_log_text(
         "Sonarqube",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+// TODO: see a way to allow users to use their own WpScan API Key
+async fn wpscan(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("WpScan     | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "wpscan --format=json --output=/home/enygmah/_outputs/wpscan.json --random-user-agent --clear-cache --update --no-banner --url {}",
+            asset
+        ),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "WpScan",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn owaspzapproxy(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("ZapProxy   | (This usually takes a while) Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "/usr/local/bin/ZAP-proxy/zap.sh -cmd -quickurl {} -quickout /home/enygmah/_outputs/zap-proxy.json",
+            asset
+        ),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "ZapProxy",
         logger::EnygmahLogType::Success,
     ));
 }

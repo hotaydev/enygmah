@@ -65,9 +65,7 @@ RUN python3 -m pip install semgrep --break-system-packages
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Crossplatform.zip && \
     unzip ZAP_*_Crossplatform.zip && \
     rm -rf ZAP_*_Crossplatform.zip && \
-    mv ZAP_* /usr/local/bin/ZAP-proxy && \
-    echo -e "#!/bin/bash\n\nbash /usr/local/bin/ZAP-proxy/zap.sh\n" > /usr/local/bin/zap && \
-    chmod +x /usr/local/bin/zap
+    mv ZAP_* /usr/local/bin/ZAP-proxy
 
 ##############################################################################################################
 

@@ -21,10 +21,10 @@ pub enum Tools {
     // Snyk, // Need to authenticate, so we'll use it later (also it doesn't work well in Alpine Linux)
 
     // https://github.com/wpscanteam/wpscan
-    // WpScan,
+    WpScan,
 
     // https://github.com/zaproxy/zaproxy
-    // OwaspZapProxy,
+    OwaspZapProxy,
 
     // https://github.com/sullo/nikto
     // Nikto,

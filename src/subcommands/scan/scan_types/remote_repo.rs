@@ -1,8 +1,11 @@
 use bollard::Docker;
 
-use crate::helpers::{
-    enygmah_docker::{self, get_docker},
-    logger,
+use crate::{
+    helpers::{
+        enygmah_docker::{self, get_docker},
+        logger,
+    },
+    subcommands::scan::hooks,
 };
 use std::process;
 
@@ -27,7 +30,7 @@ pub async fn analyze(url: &String) {
     let remote_container_path: String = format!("/home/enygmah/{}", get_repo_name(url).unwrap());
 
     local_repo::execute_remote_analysis(&remote_container_path, &docker).await;
-    local_repo::cleanup_copied_folder(&remote_container_path, &docker).await;
+    hooks::post_scan::delete_created_folder(&docker, &remote_container_path).await;
 }
 
 async fn download_source_code(url: &String, docker: &Docker) {
