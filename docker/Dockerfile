@@ -11,20 +11,23 @@ WORKDIR /home/enygmah
 ############################# Installing needed tools for the Security tools we'll use #######################
 
 RUN apk update && \
-    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay
+    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers
 
 ## Upgrading RubyGems and pip
 RUN gem update --system 3.5.18 --no-document && \
     python3 -m pip install --upgrade pip --break-system-packages
 
+## Installing Rust and Cargo (used for Wapiti)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
 ## Installing Go Lang
 RUN export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "arm64"; else echo "amd64"; fi) && wget --secure-protocol=TLSv1_2 --max-redirect=1 "https://go.dev/dl/go1.23.1.linux-${packageArch}.tar.gz" && \
     tar -C /usr/local -xzf ./go*.linux-*.tar.gz && \
     rm -rf ./go*.linux-*.tar.gz && \
-    echo 'export PATH="$PATH:/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin"' >> /etc/profile && \
-    PATH="/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:${PATH}"
+    echo 'export PATH="$PATH:/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:/root/.cargo/env"' >> /etc/profile && \
+    PATH="/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:/root/.cargo/env:${PATH}"
 
-ENV PATH="/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:${PATH}"
+ENV PATH="/usr/local/go/bin:/root/go/bin:/usr/local/bin/sonar-scanner/bin:/root/.cargo/env:${PATH}"
 
 ##############################################################################################################
 
@@ -66,6 +69,11 @@ RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://binaries.sonarsource
 
 ## Install Semgrep
 RUN python3 -m pip install semgrep --break-system-packages
+
+## Install Wapiti
+RUN . /root/.cargo/env && \
+    pip install cryptography --global-option=build_ext --global-option="-L/usr/local/opt/openssl/lib" --global-option="-I/usr/local/opt/openssl/include" --break-system-packages && \
+    python3 -m pip install wapiti3 --break-system-packages
 
 ## Install Owasp Zap Proxy
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Crossplatform.zip && \

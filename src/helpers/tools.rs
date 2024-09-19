@@ -51,16 +51,13 @@ pub enum Tools {
     // ThreatMapper
 
     // https://wapiti-scanner.github.io/
-    // Wapiti
+    Wapiti,
 
     // https://github.com/inspec/inspec
     // Inspec, // Used for writing custom rules for Docker Images
 
     // https://github.com/aquasecurity/kube-bench
     // Kubebench
-
-    // https://github.com/prowler-cloud/prowler
-    // Prowler
 
     // https://github.com/danmar/cppcheck
     CppCheck,

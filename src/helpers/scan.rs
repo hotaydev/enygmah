@@ -16,6 +16,7 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::OwaspZapProxy => owaspzapproxy(asset, docker, pb).await,
         Tools::Nikto => nikto(asset, docker, pb).await,
         Tools::Nuclei => nuclei(asset, docker, pb).await,
+        Tools::Wapiti => wapiti(asset, docker, pb).await,
         // Tools::MobSF => println!("{}", asset),
         // Tools::DockerBenchSecurity => println!("{}", asset),
         // Tools::DockerScout => println!("{}", asset),
@@ -301,6 +302,28 @@ async fn nuclei(asset: &str, docker: &Docker, pb: &ProgressBar) {
     );
     pb.finish_with_message(logger::create_log_text(
         "Nuclei",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn wapiti(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Wapiti     | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "wapiti --url={} --scope=domain --flush-session --depth=10 --format=json --level=2 --output=/home/enygmah/_outputs/wapiti.json",
+            asset
+        ),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "Wapiti",
         logger::EnygmahLogType::Success,
     ));
 }
