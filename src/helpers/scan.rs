@@ -306,12 +306,14 @@ async fn nuclei(asset: &str, docker: &Docker, pb: &ProgressBar) {
     ));
 }
 
+// Passing also `--level=2` makes it get more vulnerabilities (possibly), but takes 10x more time.
+// TODO: see a way to allow the user to pass an "aggressivity" level
 async fn wapiti(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Wapiti     | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!(
-            "wapiti --url={} --scope=domain --flush-session --depth=10 --format=json --level=2 --output=/home/enygmah/_outputs/wapiti.json",
+            "wapiti --url={} --scope=domain --flush-session --depth=10 --format=json --output=/home/enygmah/_outputs/wapiti.json",
             asset
         ),
     )
