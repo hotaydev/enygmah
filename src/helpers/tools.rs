@@ -1,6 +1,9 @@
 pub enum Tools {
     // https://github.com/aquasecurity/trivy
-    Trivy,
+    TrivyFs,
+
+    // https://github.com/aquasecurity/trivy
+    TrivyDocker,
 
     // https://github.com/SonarSource/sonarqube
     Sonarqube,
@@ -58,6 +61,12 @@ pub enum Tools {
 
     // https://github.com/aquasecurity/kube-bench
     // Kubebench
+
+    // https://github.com/microsoft/binskim
+    // binskim
+
+    // https://github.com/radareorg/radare2
+    // radare2 // (see how to use it for binary analysis)
 
     // https://github.com/danmar/cppcheck
     CppCheck,

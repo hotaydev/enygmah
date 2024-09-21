@@ -71,12 +71,22 @@ pub async fn create_enygmah_container(docker: &Docker) {
 
     create_network(docker).await;
 
+    // also mounts /var/run/docker.sock:/var/run/docker.sock
     let container_config = Config {
         image: Some("hotay/enygmah"),
         host_config: Some(HostConfig {
             network_mode: Some(String::from("enygmah-network")),
+            binds: Some(vec![String::from(
+                "/var/run/docker.sock:/var/run/docker.sock",
+            )]),
             ..Default::default()
         }),
+        volumes: Some(
+            [("/var/run/docker.sock", HashMap::new())]
+                .iter()
+                .cloned()
+                .collect(),
+        ),
         ..Default::default()
     };
 

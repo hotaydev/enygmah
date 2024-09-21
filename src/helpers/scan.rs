@@ -5,7 +5,8 @@ use super::{enygmah_docker, logger, sonarqube, tools::Tools};
 
 pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBar) {
     match tool {
-        Tools::Trivy => trivy(asset, docker, pb).await,
+        Tools::TrivyFs => trivy_filesystem(asset, docker, pb).await,
+        Tools::TrivyDocker => trivy_docker(asset, docker, pb).await,
         Tools::Sonarqube => sonarqube(asset, docker, pb).await,
         Tools::Semgrep => semgrep(asset, docker, pb).await,
         Tools::OsvScanner => osv_scanner(asset, docker, pb).await,
@@ -24,11 +25,29 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
     }
 }
 
-async fn trivy(asset: &str, docker: &Docker, pb: &ProgressBar) {
+async fn trivy_filesystem(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Trivy      | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", asset),
+    ).await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "Trivy",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn trivy_docker(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Trivy      | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!("trivy image --format=json --output=/home/enygmah/_outputs/trivy.json --license-full --exit-code=0 --severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL {}", asset),
     ).await;
     pb.set_style(
         ProgressStyle::default_spinner()

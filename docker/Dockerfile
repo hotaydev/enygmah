@@ -47,7 +47,7 @@ RUN /usr/local/go/bin/go install github.com/securego/gosec/v2/cmd/gosec@latest
 RUN /usr/local/go/bin/go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 
 ## Install Nikto
-RUN git clone https://github.com/sullo/nikto.git /usr/local/bin/nikto
+RUN git clone --depth=1 https://github.com/sullo/nikto.git /usr/local/bin/nikto
 
 ## Install WpScan
 RUN gem install wpscan --no-document
