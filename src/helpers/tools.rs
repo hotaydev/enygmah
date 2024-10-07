@@ -66,7 +66,7 @@ pub enum Tools {
     // binskim (Binary)
 
     // https://github.com/anchore/grype
-    // grype (Docker)
+    Grype,
 
     // https://github.com/quay/clair
     // Clair (Docker)

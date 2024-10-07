@@ -85,6 +85,9 @@ RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/z
 RUN mkdir /root/.docker/ && \
     curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
 
+## Install Grype
+RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
 ##############################################################################################################
 
 ###################################### Cleanup cache and garbage #############################################

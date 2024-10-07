@@ -18,6 +18,7 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::Nikto => nikto(asset, docker, pb).await,
         Tools::Nuclei => nuclei(asset, docker, pb).await,
         Tools::Wapiti => wapiti(asset, docker, pb).await,
+        Tools::Grype => grype(asset, docker, pb).await,
         // Tools::MobSF => println!("{}", asset),
         // Tools::DockerBenchSecurity => println!("{}", asset),
         // Tools::DockerScout => println!("{}", asset),
@@ -345,6 +346,28 @@ async fn wapiti(asset: &str, docker: &Docker, pb: &ProgressBar) {
     );
     pb.finish_with_message(logger::create_log_text(
         "Wapiti",
+        logger::EnygmahLogType::Success,
+    ));
+}
+
+async fn grype(asset: &str, docker: &Docker, pb: &ProgressBar) {
+    pb.set_message("Grype      | Scanning...");
+    enygmah_docker::execute_command(
+        docker,
+        format!(
+            "grype {} --output=json --show-suppressed --file /home/enygmah/_outputs/grype.json",
+            asset
+        ),
+    )
+    .await;
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_strings(&["◆"])
+            .template("{spinner:.green.bold} {msg}")
+            .expect("Failed to set spinner template"),
+    );
+    pb.finish_with_message(logger::create_log_text(
+        "Grype",
         logger::EnygmahLogType::Success,
     ));
 }

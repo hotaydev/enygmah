@@ -25,12 +25,10 @@ async fn run_scan(docker: &Docker, docker_image: &String) {
 
     let m: MultiProgress = MultiProgress::new();
 
-    tokio::join!(create_progress_bar_and_run_scan(
-        Tools::TrivyDocker,
-        docker_image,
-        docker,
-        &m
-    ),);
+    tokio::join!(
+        create_progress_bar_and_run_scan(Tools::TrivyDocker, docker_image, docker, &m),
+        create_progress_bar_and_run_scan(Tools::Grype, docker_image, docker, &m),
+    );
 }
 
 async fn create_progress_bar_and_run_scan(
