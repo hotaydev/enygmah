@@ -31,6 +31,7 @@ pub enum AnalysisType {
 
 // TODO: add an option to allow the user to say which kind of application it is, without trying to detect
 pub async fn detect_analysis_type(asset: &String) -> AnalysisType {
+    // TODO: when assing the tag to the docker image, it detects the asset as a Web Application
     if let Ok(parsed_url) = Url::parse(asset) {
         // TODO: we can test also if the input is just <user>/<repo>, without http, ssh, or .git at the final
 

@@ -11,7 +11,7 @@ WORKDIR /home/enygmah
 ############################# Installing needed tools for the Security tools we'll use #######################
 
 RUN apk update && \
-    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers
+    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers docker
 
 ## Upgrading RubyGems and pip
 RUN gem update --system 3.5.18 --no-document && \
@@ -80,6 +80,10 @@ RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/z
     unzip ZAP_*_Crossplatform.zip && \
     rm -rf ZAP_*_Crossplatform.zip && \
     mv ZAP_* /usr/local/bin/ZAP-proxy
+
+## Install Docker Scout CLI (not actually working since it needs Docker authentication)
+RUN mkdir /root/.docker/ && \
+    curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
 
 ##############################################################################################################
 

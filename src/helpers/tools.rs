@@ -18,7 +18,7 @@ pub enum Tools {
     // DockerBenchSecurity,
 
     // https://github.com/docker/scout-cli
-    // DockerScout,
+    // DockerScout, // Need to authenticate, so we'll use it later
 
     // https://github.com/snyk/cli
     // Snyk, // Need to authenticate, so we'll use it later (also it doesn't work well in Alpine Linux)
@@ -60,10 +60,16 @@ pub enum Tools {
     // Inspec, // Used for writing custom rules for Docker Images
 
     // https://github.com/aquasecurity/kube-bench
-    // Kubebench
+    // Kubebench (Docker)
 
     // https://github.com/microsoft/binskim
-    // binskim
+    // binskim (Binary)
+
+    // https://github.com/anchore/grype
+    // grype (Docker)
+
+    // https://github.com/quay/clair
+    // Clair (Docker)
 
     // https://github.com/radareorg/radare2
     // radare2 // (see how to use it for binary analysis)

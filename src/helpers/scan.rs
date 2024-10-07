@@ -44,7 +44,7 @@ async fn trivy_filesystem(asset: &str, docker: &Docker, pb: &ProgressBar) {
 }
 
 async fn trivy_docker(asset: &str, docker: &Docker, pb: &ProgressBar) {
-    pb.set_message("Trivy      | Scanning...");
+    pb.set_message("Trivy       | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!("trivy image --format=json --output=/home/enygmah/_outputs/trivy.json --license-full --exit-code=0 --severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL {}", asset),
