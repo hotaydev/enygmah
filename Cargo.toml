@@ -13,14 +13,14 @@ publish = false
 
 [dependencies]
 bollard = "0.17.1"
-clap = { version = "4.5.19", features = ["derive"] }
+clap = { version = "4.5.20", features = ["derive"] }
 colored = "2.1.0"
 dialoguer = "0.11.0"
 env_logger = "0.11.5"
 futures-util = "0.3.31"
 indicatif = "0.17.8"
 log = "0.4.22"
-tar = "0.4.42"
-tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread", "fs"] }
-url = "2.5.2"
+tar = "0.4.43"
+tokio = { version = "1.41.0", features = ["macros", "rt-multi-thread", "fs"] }
+url = "2.5.3"
 tera = { version = "1.20.0", default-features = false }
