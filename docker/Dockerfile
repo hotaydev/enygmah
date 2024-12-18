@@ -10,8 +10,9 @@ WORKDIR /home/enygmah
 
 ############################# Installing needed tools for the Security tools we'll use #######################
 
+# Needs NodeJS for sonar-scanner analysis on NodeJS projects
 RUN apk update && \
-    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers docker
+    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers docker nodejs npm
 
 ## Upgrading RubyGems and pip
 RUN gem update --system 3.5.18 --no-document && \
