@@ -4,3 +4,4 @@
 _outputs/
 enygmah
 *.sarif
+.DS_Store

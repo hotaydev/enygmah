@@ -20,9 +20,7 @@ pub async fn clean_up() {
         }
     }
 
-    // TODO: this "merge" commands aren't working yet...
-    // enygmah_docker::execute_command(&docker, String::from("jq -s '{\"version\": \"2.1.0\", \"$schema\": \"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json\", \"runs\": map(.runs) | add}' /home/enygmah/_outputs/*.sarif > output.sarif")).await;
-    // enygmah_docker::execute_command(&docker, String::from("find /home/enygmah/_outputs/ -maxdepth 1 -type f -name \"*.sarif\" ! -name \"output.sarif\" -exec rm {} +")).await;
+    enygmah_docker::execute_command(&docker, String::from("/usr/local/bin/join-results")).await;
 
     let mut file: File = File::create("analysis-results.tar").await.unwrap();
 
@@ -48,6 +46,7 @@ pub async fn clean_up() {
     untar_file("analysis-results.tar").unwrap();
     std::fs::remove_file("analysis-results.tar").unwrap();
 
+    println!(""); // Just add a space
     println!(""); // Just add a space
     logger::create_log(
         "Results exported to `_outputs` folder.",

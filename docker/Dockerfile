@@ -93,6 +93,10 @@ RUN mkdir /root/.docker/ && \
 ## Install Grype
 RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
+## Copy results aggregator to Docker image
+COPY ./join-results.sh /usr/local/bin/join-results
+RUN chmod +x /usr/local/bin/join-results
+
 ##############################################################################################################
 
 ###################################### Cleanup cache and garbage #############################################
