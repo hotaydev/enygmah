@@ -10,4 +10,4 @@ clean:
 	docker rmi $(IMAGE_NAME); \
 	docker builder prune --force
 
-.PHONY: build
+.PHONY: build clean

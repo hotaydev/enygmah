@@ -1,4 +1,4 @@
-FROM alpine:3.20@sha256:beefdbd8a1da6d2915566fde36db9db0b524eb737fc57cd1367effd16dc0d06d
+FROM alpine:3.21@sha256:21dc6063fd678b478f57c0e13f47560d0ea4eeba26dfc947b2a4f81f686b9f45
 
 LABEL maintainer="Taylor Hoffmann <taylor@hotay.dev>"
 LABEL version="1.0.0"
@@ -12,14 +12,15 @@ WORKDIR /home/enygmah
 
 # Needs NodeJS for sonar-scanner analysis on NodeJS projects
 RUN apk update && \
-    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers docker nodejs npm
+    apk add --no-cache gcc g++ make git wget jq ruby ruby-dev openjdk21 python3 py3-pip python3-dev bash curl libc6-compat openssl perl perl-net-ssleay libffi-dev libressl-dev bsd-compat-headers docker nodejs npm cmake
 
 ## Upgrading RubyGems and pip
 RUN gem update --system 3.5.18 --no-document && \
     python3 -m pip install --upgrade pip --break-system-packages
 
 ## Installing Rust and Cargo (used for Wapiti)
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+## Wapiti can't be used right now, it's too unstable with latest python versions
+# RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 ## Installing Go Lang
 RUN export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "arm64"; else echo "amd64"; fi) && wget --secure-protocol=TLSv1_2 --max-redirect=1 "https://go.dev/dl/go1.23.1.linux-${packageArch}.tar.gz" && \
@@ -53,10 +54,12 @@ RUN git clone --depth=1 https://github.com/sullo/nikto.git /usr/local/bin/nikto
 ## Install WpScan
 RUN gem install wpscan --no-document
 
-## Install CppCheck
-RUN apk add --no-cache cppcheck && \
-    export packageArch=$(if [ "$(apk --print-arch)" == "aarch64" ]; then echo "arm64"; else echo "amd64"; fi) && \    
-    wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${packageArch}" -O /usr/bin/yq && chmod +x /usr/bin/yq
+## Install CppCheck (build it, since the APK registry version doesn't have serif export - it's too old)
+RUN cd /tmp/ && \
+    git clone https://github.com/danmar/cppcheck.git && \
+    cd cppcheck && git fetch --tags && git checkout $(git describe --tags `git rev-list --tags --max-count=1`) && \
+    mkdir build && cd build && cmake .. && make -j$(nproc) && make install && \
+    rm -rf /tmp/cppcheck
 
 ## Install SpotBugs
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/spotbugs/spotbugs/releases/download/4.8.6/spotbugs-4.8.6.tgz && \
@@ -72,9 +75,10 @@ RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://binaries.sonarsource
 RUN python3 -m pip install semgrep --break-system-packages
 
 ## Install Wapiti
-RUN . /root/.cargo/env && \
-    pip install cryptography --global-option=build_ext --global-option="-L/usr/local/opt/openssl/lib" --global-option="-I/usr/local/opt/openssl/include" --break-system-packages && \
-    python3 -m pip install wapiti3 --break-system-packages
+## Wapiti can't be used right now, it's too unstable with latest python versions
+# RUN . /root/.cargo/env && \
+#     pip install cryptography --global-option=build_ext --global-option="-L/usr/local/opt/openssl/lib" --global-option="-I/usr/local/opt/openssl/include" --break-system-packages && \
+#     python3 -m pip install wapiti3 --break-system-packages
 
 ## Install Owasp Zap Proxy
 RUN wget --secure-protocol=TLSv1_2 --max-redirect=1 https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Crossplatform.zip && \

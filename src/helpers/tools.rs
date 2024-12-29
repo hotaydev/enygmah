@@ -54,7 +54,7 @@ pub enum Tools {
     // ThreatMapper
 
     // https://wapiti-scanner.github.io/
-    Wapiti,
+    // Wapiti, // Wapiti can't be used right now, it's too unstable with latest python versions
 
     // https://github.com/inspec/inspec
     // Inspec, // Used for writing custom rules for Docker Images

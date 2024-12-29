@@ -17,7 +17,7 @@ pub async fn run_scan(tool: Tools, asset: &str, docker: &Docker, pb: &ProgressBa
         Tools::OwaspZapProxy => owaspzapproxy(asset, docker, pb).await,
         Tools::Nikto => nikto(asset, docker, pb).await,
         Tools::Nuclei => nuclei(asset, docker, pb).await,
-        Tools::Wapiti => wapiti(asset, docker, pb).await,
+        // Tools::Wapiti => wapiti(asset, docker, pb).await, // Wapiti can't be used right now, it's too unstable with latest python versions
         Tools::Grype => grype(asset, docker, pb).await,
         // Tools::MobSF => println!("{}", asset),
         // Tools::DockerBenchSecurity => println!("{}", asset),
@@ -30,7 +30,7 @@ async fn trivy_filesystem(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Trivy      | Scanning...");
     enygmah_docker::execute_command(
         docker,
-        format!("trivy fs --scanners vuln,misconfig,secret -f json -o /home/enygmah/_outputs/trivy.json {}", asset),
+        format!("trivy fs --scanners vuln,misconfig,secret --exit-code=0 -f sarif --severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -o /home/enygmah/_outputs/trivy-fs.sarif {}", asset),
     ).await;
     pb.set_style(
         ProgressStyle::default_spinner()
@@ -48,7 +48,7 @@ async fn trivy_docker(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Trivy       | Scanning...");
     enygmah_docker::execute_command(
         docker,
-        format!("trivy image --format=json --output=/home/enygmah/_outputs/trivy.json --license-full --exit-code=0 --severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL {}", asset),
+        format!("trivy image --format=sarif --output=/home/enygmah/_outputs/trivy-docker.sarif --license-full --exit-code=0 --severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL {}", asset),
     ).await;
     pb.set_style(
         ProgressStyle::default_spinner()
@@ -67,7 +67,7 @@ async fn osv_scanner(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "osv-scanner scan --format json --output /home/enygmah/_outputs/osv-scanner.json {}",
+            "osv-scanner scan --format sarif --output /home/enygmah/_outputs/osv-scanner.sarif {}",
             asset
         ),
     )
@@ -91,30 +91,9 @@ async fn cppcheck(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --error-exitcode=0 --xml --xml-version=2 --quiet {} 2> /home/enygmah/_outputs/cppcheck.xml",
+            "cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --error-exitcode=0 --output-format=sarif --quiet {} 2> /home/enygmah/_outputs/cppcheck.sarif",
             asset
         ),
-    )
-    .await;
-
-    // Convert the CppCheck XML report to JSON
-    enygmah_docker::execute_command(
-        docker,
-        String::from("yq -p=xml -o=json /home/enygmah/_outputs/cppcheck.xml > /home/enygmah/_outputs/cppcheck.json"),
-    )
-    .await;
-
-    // Remove the CppCheck XML report
-    enygmah_docker::execute_command(
-        docker,
-        String::from("rm -f /home/enygmah/_outputs/cppcheck.xml"),
-    )
-    .await;
-
-    // Remove the CppCheck JSON report if it's empty due to a lack of .c/.cpp files
-    enygmah_docker::execute_command(
-        docker,
-        String::from("if [ `cat /home/enygmah/_outputs/cppcheck.json` = \"null\" ]; then rm -f /home/enygmah/_outputs/cppcheck.json; fi"),
     )
     .await;
 
@@ -137,30 +116,9 @@ async fn spotbugs(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "java -jar /usr/local/bin/spotbugs-src/lib/spotbugs.jar -textui -low -progress -exitcode=0 -xml=/home/enygmah/_outputs/spotbugs.xml {}",
+            "java -jar /usr/local/bin/spotbugs-src/lib/spotbugs.jar -textui -low -progress -exitcode=0 -sarif=/home/enygmah/_outputs/spotbugs.sarif {}",
             asset
         ),
-    )
-    .await;
-
-    // Convert the SpotBugs XML report to JSON
-    enygmah_docker::execute_command(
-        docker,
-        String::from("yq -p=xml -o=json /home/enygmah/_outputs/spotbugs.xml > /home/enygmah/_outputs/spotbugs.json"),
-    )
-    .await;
-
-    // Remove the SpotBugs XML report
-    enygmah_docker::execute_command(
-        docker,
-        String::from("rm -f /home/enygmah/_outputs/spotbugs.xml"),
-    )
-    .await;
-
-    // Remove the SpotBugs JSON report if it's empty due to the project being in other langages than Java
-    enygmah_docker::execute_command(
-        docker,
-        String::from("if [ `cat /home/enygmah/_outputs/spotbugs.json` = \"null\" ]; then rm -f /home/enygmah/_outputs/spotbugs.json; fi"),
     )
     .await;
 
@@ -181,7 +139,7 @@ async fn gosec(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "gosec -fmt=json -no-fail -nosec -show-ignored -out=/home/enygmah/_outputs/gosec.json {}/...",
+            "gosec -fmt=sarif -no-fail -nosec -show-ignored -out=/home/enygmah/_outputs/gosec.sarif {}/...",
             asset
         ),
     )
@@ -204,7 +162,7 @@ async fn semgrep(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "semgrep scan --json --output /home/enygmah/_outputs/semgrep.json {}",
+            "semgrep scan --sarif --output /home/enygmah/_outputs/semgrep.sarif {}",
             asset
         ),
     )
@@ -240,6 +198,7 @@ async fn sonarqube(asset: &str, docker: &Docker, pb: &ProgressBar) {
 }
 
 // TODO: see a way to allow users to use their own WpScan API Key
+// TODO: No Sarif Format...
 async fn wpscan(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("WpScan     | Scanning...");
     enygmah_docker::execute_command(
@@ -262,6 +221,7 @@ async fn wpscan(asset: &str, docker: &Docker, pb: &ProgressBar) {
     ));
 }
 
+// TODO: no Sarif export...
 async fn owaspzapproxy(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("ZapProxy   | (It takes a while) Scanning...");
     enygmah_docker::execute_command(docker, String::from("rm -rf /root/.ZAP/")).await;
@@ -285,6 +245,7 @@ async fn owaspzapproxy(asset: &str, docker: &Docker, pb: &ProgressBar) {
     ));
 }
 
+// TODO: No Sarif export...
 async fn nikto(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Nikto      | Scanning...");
     enygmah_docker::execute_command(
@@ -309,7 +270,7 @@ async fn nuclei(asset: &str, docker: &Docker, pb: &ProgressBar) {
     enygmah_docker::execute_command(
         docker,
         format!(
-            "nuclei -target={} -as -json-export=/home/enygmah/_outputs/nuclei.json -follow-redirects -max-redirects=2",
+            "nuclei -target={} -as -sarif-export=/home/enygmah/_outputs/nuclei.sarif -follow-redirects -max-redirects=2",
             asset
         ),
     )
@@ -326,36 +287,38 @@ async fn nuclei(asset: &str, docker: &Docker, pb: &ProgressBar) {
     ));
 }
 
+// Wapiti can't be used right now, it's too unstable with latest python versions
 // Passing also `--level=2` makes it get more vulnerabilities (possibly), but takes 10x more time.
 // TODO: see a way to allow the user to pass an "aggressivity" level
-async fn wapiti(asset: &str, docker: &Docker, pb: &ProgressBar) {
-    pb.set_message("Wapiti     | Scanning...");
-    enygmah_docker::execute_command(
-        docker,
-        format!(
-            "wapiti --url={} --scope=domain --flush-session --depth=10 --format=json --output=/home/enygmah/_outputs/wapiti.json",
-            asset
-        ),
-    )
-    .await;
-    pb.set_style(
-        ProgressStyle::default_spinner()
-            .tick_strings(&["◆"])
-            .template("{spinner:.green.bold} {msg}")
-            .expect("Failed to set spinner template"),
-    );
-    pb.finish_with_message(logger::create_log_text(
-        "Wapiti",
-        logger::EnygmahLogType::Success,
-    ));
-}
+// TODO: No Sarif Export...
+// async fn wapiti(asset: &str, docker: &Docker, pb: &ProgressBar) {
+//     pb.set_message("Wapiti     | Scanning...");
+//     enygmah_docker::execute_command(
+//         docker,
+//         format!(
+//             "wapiti --url={} --scope=domain --flush-session --depth=10 --format=json --output=/home/enygmah/_outputs/wapiti.json",
+//             asset
+//         ),
+//     )
+//     .await;
+//     pb.set_style(
+//         ProgressStyle::default_spinner()
+//             .tick_strings(&["◆"])
+//             .template("{spinner:.green.bold} {msg}")
+//             .expect("Failed to set spinner template"),
+//     );
+//     pb.finish_with_message(logger::create_log_text(
+//         "Wapiti",
+//         logger::EnygmahLogType::Success,
+//     ));
+// }
 
 async fn grype(asset: &str, docker: &Docker, pb: &ProgressBar) {
     pb.set_message("Grype      | Scanning...");
     enygmah_docker::execute_command(
         docker,
         format!(
-            "grype {} --output=json --show-suppressed --file /home/enygmah/_outputs/grype.json",
+            "grype {} --output=sarif --show-suppressed --file /home/enygmah/_outputs/grype.sarif",
             asset
         ),
     )
