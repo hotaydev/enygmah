@@ -2,7 +2,7 @@
 IMAGE_NAME = hotay/enygmah
 
 build:
-	docker build -t $(IMAGE_NAME) .
+	docker build -t $(IMAGE_NAME):latest .
 
 clean:
 	docker stop enygmah sonarqube-enygmah; \
