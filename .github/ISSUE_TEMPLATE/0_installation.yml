@@ -1,0 +1,72 @@
+name: I am having difficulty installing enygmah or getting it to work
+description:
+  You have run into problems while downloading or installing enygmah, or the
+  "enygmah" tool is crashing, or you are running into some other issue before even
+  being able to run enygmah tool.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for using enygmah!
+
+        If you are looking for support, please check out our documentation
+        or consider asking a question on our Github Discussions Page:
+
+          - https://github.com/hotaydev/enygmah/wiki
+          - https://github.com/hotaydev/enygmah/discussions/categories/q-a
+
+        If you have found a bug or if our documentation doesn't have an answer
+        to what you're looking for, then fill out the template below.
+  - type: markdown
+    attributes:
+      value: |
+        Before filling the form fields, please consider the following:
+        - Ensure that you have searched the [existing issues](https://github.com/hotaydev/enygmah/issues)
+        - Read the "Submit an Issue" section of our [Contributing Guide](https://github.com/hotaydev/enygmah/blob/main/CONTRIBUTING.md#submit-an-issue)
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Please tell us exactly how to reproduce the problem you are running into.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual results
+      description: Please tell us what is actually happening
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Logs
+      description: |
+        Include the full logs of the commands you are running between the lines
+        with the backticks below. If you are running any `enygmah` commands,
+        please include the output of running them with `--debug`; for example,
+        the output of running `enygmah --debug scan`.
+
+        If the logs are too large to be uploaded to Github, you may upload
+        them as a `txt` file or use online tools like https://pastebin.com to
+        share it.
+
+        Note: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload logs.
+      value: |
+        <details open>
+        <summary>Logs</summary>
+
+        ```console
+
+        <!-- Paste your logs here -->
+
+        ```
+
+        </details>
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: |
+        Please provide any useful additional information

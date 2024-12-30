@@ -1,0 +1,50 @@
+name: Performance related issues
+description: |
+  You found a memory leak, unoptimized function or other performance related issue
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for using enygmah!
+
+        If you are looking for support, please check out our documentation
+        or consider asking a question on our Github Discussions Page:
+
+          - https://github.com/hotaydev/enygmah/wiki
+          - https://github.com/hotaydev/enygmah/discussions/
+  - type: markdown
+    attributes:
+      value: |
+        Before filling the form fields, please consider the following:
+        - Ensure that you have searched the [existing issues](https://github.com/hotaydev/enygmah/issues)
+        - Read the "Submit an Issue" section of our [Contributing Guide](https://github.com/hotaydev/enygmah/blob/main/CONTRIBUTING.md#submit-an-issue)
+  - type: textarea
+    attributes:
+      label: Why the issue is a performance issue?
+      description: Please tell where are the issue and why it's an issue.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How can we solve the issue?
+      description: If you know how or have a guess, please tell us.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Useful logs and assets
+      description: |
+        Upload any logs, tests, screenshots or videos of the performance issue if applicable.
+      value: |
+        <details open>
+        <summary>Logs, tests, Screenshots or Video demonstration</summary>
+
+        [Describe here]
+
+        [Upload media here]
+
+        </details>

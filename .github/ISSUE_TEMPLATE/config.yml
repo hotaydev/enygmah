@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Help from the community
+    url: https://github.com/hotaydev/enygmah/discussions
+    about: Ask your questions about how to achieve a particular effect using enygmah or get other type of help from the community.
