@@ -119,11 +119,39 @@ We owe a huge debt of gratitude to the developers and creators of these projects
 
 Thank you to all those who inspire us, and we look forward to seeing what the enygmah community will create with this tool!
 
-enygmah is also made possible by the following technologies:
-
+### enygmah is also made possible by the following technologies:
 * [Rust](https://www.rust-lang.org/) - The base of our CLI
 * [clap](https://github.com/clap-rs/clap) - CLI Framework for Rust
 * [bollard](https://github.com/fussybeaver/bollard) - Rust bindings for Docker interaction
+
+### And uses under the wheel these tools ✅:
+* [Trivy](https://github.com/aquasecurity/trivy) - Detect secrets, code vulnerabilities and vulnerable dependencies locally and in Docker images.
+* [Sonarqube](https://github.com/SonarSource/sonarqube) - Detect Code issues and Hotspots for possible vulnerable code.
+* [OsvScanner](https://github.com/google/osv-scanner) - Detect vulnerable dependencies.
+* [GoSec](https://github.com/securego/gosec) - Scan for vulnerabilities in Go Lang.
+* [WpScan](https://github.com/wpscanteam/wpscan) - Scan for vulnerabilities in Wordpress.
+* [OwaspZapProxy](https://github.com/zaproxy/zaproxy) - Dinamically scan for vulnerabilities in web applications.
+* [Nikto](https://github.com/sullo/nikto) - Dinamically scan for vulnerabilities in web applications.
+* [Nuclei](https://github.com/projectdiscovery/nuclei) - Dinamically scan for vulnerabilities in web applications.
+* [Semgrep](https://github.com/semgrep/semgrep) - Scan for code vulnerabilities and vulnerable dependencies in static code.
+* [SpotBugs](https://github.com/spotbugs/spotbugs) - Scan for code vulnerabilities and vulnerable dependencies in Java static code.
+* [Grype](https://github.com/anchore/grype) - Scan for vulnerabilities in Docker images.
+* [CppCheck](https://github.com/danmar/cppcheck) - Scan for code vulnerabilities and vulnerable dependencies in static C/C++ code.
+
+### Tool that we'll implement soon 🛠️:
+* [Docker Bench Security](https://github.com/docker/docker-bench-security) - Benchmark Docker Security.
+* [Docker Scout](https://github.com/docker/scout-cli) - Scan for vulnerabilities in Docker Images.
+* [Snyk](https://github.com/snyk/cli) - Scan for code vulnerabilities, vulnerable dependencies and vulnerabilities in Docker images.
+* [MobSF](https://github.com/MobSF/Mobile-Security-Framework-MobSF) - Search for vulnerabilities in Mobile Apps
+* [OSS-Fuzz](https://github.com/google/oss-fuzz) - Fuzzer for web applications.
+* [Secret Scanner](https://github.com/deepfence/SecretScanner) - Scan for secrets in Containers and File Systems.
+* [Threat Mapper](https://github.com/deepfence/ThreatMapper) - Threat Management and Path Enumeration for Cloud Environments.
+* [Wapiti](https://wapiti-scanner.github.io/) - Waiting to be stable with python 3.13 to add to this tool.
+* [Inspec](https://github.com/inspec/inspec) - Vulnerability analisis in infrastructure.
+* [Kubebench](https://github.com/aquasecurity/kube-bench) - Benchmark Kubernetes Security.
+* [binskim](https://github.com/microsoft/binskim) - Binary static analysis tool
+* [Clair](https://github.com/quay/clair) - Docker Security Scanner.
+* [radare2](https://github.com/radareorg/radare2) - Binary static analysis tool
 
 # 🙏 Thank You
 
