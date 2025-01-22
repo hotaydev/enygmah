@@ -49,10 +49,6 @@ Enygmah was created to consolidate many processes into a single solution. It off
 
 And the best part? **It's completely free and open source!**
 
-<a href="https://github.com/hotaydev/enygmah/releases/latest/">
-  <img src="https://img.shields.io/badge/Download_enygmah-black?labelColor=black&style=for-the-badge" align="right" alt="Download enygmah"/>
-</a>
-
 ## 👀 How can I use it?
 
 To start using enygmah, simply go to our [releases](https://github.com/hotaydev/enygmah/releases/latest) page and download the latest version of enygmah (we offer different versions for Linux (or Windows WSL), macOS).
