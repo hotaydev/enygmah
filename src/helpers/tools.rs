@@ -76,4 +76,39 @@ pub enum Tools {
 
     // https://github.com/danmar/cppcheck
     CppCheck,
+    // Extra Tools:
+    // Web Application Scanners
+    // NMap Scan ?
+    // Wfuzz
+    // SQLMap
+    // Amass
+
+    // Mobile Security
+    // Frida
+    // ApkTool
+    // Drozer
+    // adb
+    // Objection (iOS)
+    // Needle (iOS)
+    // Class-dump (iOS)
+
+    // API Testing
+    // OWASP Amass
+    // Swagger Inspector
+    // SecApp Intercept
+    // Kite Runner
+
+    // Code Scanning
+    // CodeQL
+    // Bandit
+    // GitLeaks
+    // FindSecBugs
+
+    // Cloud Security
+    // Prowler
+    // ScoutSuite
+    // CloudSploit
+    // Pacu
+    // Steampipe
+    // Cloudmapper
 }
